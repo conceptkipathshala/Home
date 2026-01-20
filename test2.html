@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>International Current Affairs 2025 - Concept ki Pathshala</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; transition: all 0.3s ease; }
+        .sticky-panel { position: sticky; top: 1rem; }
+        .question-btn.active { background-color: #2563eb; color: white; border-color: #2563eb; }
+        .question-btn.answered { background-color: #10b981; color: white; border-color: #10b981; }
+        .option-label { transition: all 0.2s; cursor: pointer; }
+        .option-input:checked + .option-label { background-color: #dbeafe; border-color: #3b82f6; }
+        @media print { .no-print { display: none; } }
+        .review-card { border-left: 4px solid #e2e8f0; }
+        .review-card.correct { border-left-color: #10b981; background-color: #f0fdf4; }
+        .review-card.incorrect { border-left-color: #ef4444; background-color: #fef2f2; }
+        .review-card.unanswered { border-left-color: #f59e0b; background-color: #fffbeb; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 no-print">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="bg-blue-600 p-1.5 rounded-lg text-white">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <span class="font-bold text-slate-800 text-lg hidden md:block">Concept ki Pathshala</span>
+            </div>
+            
+            <div class="flex items-center space-x-2 md:space-x-6">
+                <button onclick="toggleLanguage()" class="flex items-center bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg border border-slate-300 transition text-sm font-bold text-slate-700">
+                    <i class="fas fa-language mr-2 text-blue-600"></i>
+                    <span id="lang-text">English</span>
+                </button>
+                <div class="text-slate-600 font-medium text-sm md:text-base">
+                    <i class="far fa-clock mr-1"></i><span id="timer-label">समय:</span> <span id="timer" class="text-blue-600 font-bold">30:00</span>
+                </div>
+                <button onclick="confirmSubmit()" class="bg-red-600 text-white px-3 md:px-4 py-1.5 rounded-lg font-bold hover:bg-red-700 transition text-sm">
+                    Submit
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main id="quiz-view" class="max-w-7xl mx-auto px-4 py-8 no-print">
+        <div class="grid lg:grid-cols-4 gap-8">
+            <div class="lg:col-span-3 space-y-6">
+                <div id="quiz-container" class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200">
+                    <div class="flex justify-between items-center mb-6">
+                        <span class="text-blue-600 font-bold uppercase tracking-wider text-sm">
+                            <span id="q-label">Question</span> <span id="current-q-num">1</span> / 30
+                        </span>
+                        <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold">International Affairs</span>
+                    </div>
+                    <h2 id="question-text" class="text-xl md:text-2xl font-bold text-slate-800 mb-8 leading-snug"></h2>
+                    <div id="options-container" class="space-y-4"></div>
+                    <div class="flex justify-between items-center mt-10 pt-6 border-t border-slate-100">
+                        <button onclick="prevQuestion()" id="prev-btn" class="flex items-center text-slate-500 font-bold hover:text-blue-600 disabled:opacity-30">
+                            <i class="fas fa-chevron-left mr-2"></i> <span id="prev-text">Previous</span>
+                        </button>
+                        <button onclick="nextQuestion()" id="next-btn" class="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-200 transition">
+                            <span id="next-text">Save & Next</span> <i class="fas fa-chevron-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="lg:col-span-1">
+                <div class="sticky-panel space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                        <h3 class="font-bold text-slate-800 mb-4 flex items-center">
+                            <i class="fas fa-th mr-2 text-blue-500"></i> <span id="palette-label">Question Palette</span>
+                        </h3>
+                        <div id="palette-container" class="grid grid-cols-5 gap-2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal -->
+    <div id="info-modal" class="fixed inset-0 bg-slate-900/80 z-[100] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl">
+            <h2 class="text-2xl font-bold text-slate-800 mb-2" id="modal-title">अंतिम चरण</h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1" id="label-name">पूरा नाम</label>
+                    <input type="text" id="user-name" class="w-full px-4 py-3 rounded-xl border border-slate-200 outline-none">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1" id="label-exam">लक्षित परीक्षा</label>
+                    <select id="user-exam" class="w-full px-4 py-3 rounded-xl border border-slate-200">
+                        <option>UPSC / BPSC</option>
+                        <option>SSC CGL / GD</option>
+                        <option>Railway / NTPC</option>
+                        <option>Police / Daroga</option>
+                    </select>
+                </div>
+                <button onclick="generateResult()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold hover:bg-blue-700" id="btn-gen">
+                    स्कोर कार्ड देखें
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Result View -->
+    <div id="result-view" class="fixed inset-0 bg-slate-50 z-[110] hidden overflow-y-auto">
+        <div class="max-w-4xl mx-auto px-4 py-12">
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-200 mb-8">
+                <div class="bg-blue-600 p-8 text-center text-white">
+                    <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-chart-line text-3xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold mb-1">Practice Score Card</h2>
+                    <p class="text-blue-100">International Current Affairs 2025</p>
+                </div>
+                
+                <div class="p-6 md:p-10">
+                    <div class="grid grid-cols-2 gap-4 mb-8">
+                        <div class="bg-slate-50 p-4 rounded-2xl text-center border border-slate-100">
+                            <p class="text-slate-500 text-xs font-bold uppercase mb-1">Total Score</p>
+                            <p class="text-3xl font-black text-slate-800"><span id="res-score">0</span> / 30</p>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-2xl text-center border border-slate-100">
+                            <p class="text-slate-500 text-xs font-bold uppercase mb-1">Accuracy</p>
+                            <p class="text-3xl font-black text-slate-800" id="res-acc">0%</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4 mb-8">
+                        <div class="flex justify-between py-3 border-b border-slate-100">
+                            <span class="text-slate-500" id="res-label-name">नाम</span>
+                            <span class="font-bold text-slate-800" id="res-name">-</span>
+                        </div>
+                        <div class="flex justify-between py-3 border-b border-slate-100">
+                            <span class="text-slate-500" id="res-label-exam">परीक्षा</span>
+                            <span class="font-bold text-slate-800" id="res-exam-cat">-</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 no-print">
+                        <button onclick="window.print()" class="flex items-center justify-center bg-slate-800 text-white py-4 rounded-xl font-bold">
+                            <i class="fas fa-print mr-2"></i> Print Result
+                        </button>
+                        <button onclick="shareToWhatsapp()" class="flex items-center justify-center bg-green-600 text-white py-4 rounded-xl font-bold">
+                            <i class="fab fa-whatsapp mr-2"></i> WhatsApp
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <h3 class="text-2xl font-bold text-slate-800 px-4" id="review-title">Detailed Analysis</h3>
+                <div id="review-container" class="space-y-4"></div>
+            </div>
+            
+            <div class="text-center mt-12 no-print">
+                <button onclick="location.reload()" class="bg-white border border-slate-200 text-slate-600 px-8 py-3 rounded-xl font-bold hover:bg-slate-50 transition">
+                    Restart Test
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questionsData = [
+            { qh: "प्रथम 'विश्व सर्वाइकल कैंसर उन्मूलन दिवस' किस दिन को मनाया गया?", qe: "On which day was the first 'World Cervical Cancer Elimination Day' observed?", ah: "17 नवंबर", ae: "November 17", oh: ["15 अक्टूबर", "17 नवंबर", "1 दिसंबर", "10 जनवरी"], oe: ["October 15", "November 17", "December 1", "January 10"] },
+            { qh: "विश्व का कौन-सा देश प्रथम अंतर्राष्ट्रीय सैन्य संगीत समारोह आयोजित करेगा?", qe: "Which country in the world will host the first International Military Music Festival?", ah: "कतर", ae: "Qatar", oh: ["भारत", "ओमान", "कतर", "सऊदी अरब"], oe: ["India", "Oman", "Qatar", "Saudi Arabia"] },
+            { qh: "हवाई यात्रियों पर 'ग्रीन फ्यूल लेवी' लागू करने वाला विश्व का प्रथम देश कौन है?", qe: "Which is the first country in the world to implement a 'Green Fuel Levy' on air passengers?", ah: "सिंगापुर", ae: "Singapore", oh: ["सिंगापुर", "फ्रांस", "जर्मनी", "नॉर्वे"], oe: ["Singapore", "France", "Germany", "Norway"] },
+            { qh: "संयुक्त राष्ट्र जल सम्मेलन में शामिल होने वाला दक्षिण एशिया का प्रथम देश कौन है?", qe: "Which is the first South Asian country to participate in the UN Water Conference?", ah: "बांग्लादेश", ae: "Bangladesh", oh: ["भारत", "नेपाल", "श्रीलंका", "बांग्लादेश"], oe: ["India", "Nepal", "Sri Lanka", "Bangladesh"] },
+            { qh: "विश्व का प्रथम कैशलेस देश कौन बना है?", qe: "Which has become the world's first cashless country?", ah: "स्वीडन", ae: "Sweden", oh: ["जापान", "स्वीडन", "अमेरिका", "दक्षिण कोरिया"], oe: ["Japan", "Sweden", "USA", "South Korea"] },
+            { qh: "इच्छामृत्यु को वैध करार देने वाला पहला लैटिन अमेरिकी देश कौन सा है?", qe: "Which is the first Latin American country to legalize euthanasia?", ah: "उरुग्वे", ae: "Uruguay", oh: ["ब्राजील", "अर्जेंटीना", "उरुग्वे", "चिली"], oe: ["Brazil", "Argentina", "Uruguay", "Chile"] },
+            { qh: "अमेरिका के किस राज्य ने दिवाली को राजकीय अवकाश घोषित किया है?", qe: "Which US state has declared Diwali as a state holiday?", ah: "कैलिफोर्निया", ae: "California", oh: ["टेक्सास", "कैलिफोर्निया", "फ्लोरिडा", "न्यूयॉर्क"], oe: ["Texas", "California", "Florida", "New York"] },
+            { qh: "आर्थिक स्वतंत्रता सूचकांक 2025 के अनुसार दुनिया की सबसे मुक्त अर्थव्यवस्था कौन सी है?", qe: "According to the Economic Freedom Index 2025, which is the world's freest economy?", ah: "सिंगापुर", ae: "Singapore", oh: ["हांगकांग", "स्विट्जरलैंड", "सिंगापुर", "न्यूजीलैंड"], oe: ["Hong Kong", "Switzerland", "Singapore", "New Zealand"] },
+            { qh: "नेपाल की अंतरिम प्रधानमंत्री नियुक्त होने वाली प्रथम महिला कौन बनीं?", qe: "Who became the first woman to be appointed as the interim Prime Minister of Nepal?", ah: "सुशीला कार्की", ae: "Sushila Karki", oh: ["विद्या देवी भंडारी", "सुशीला कार्की", "ओंसारी घर्ती मगर", "पुष्पा कमल दहल"], oe: ["Bidhya Devi Bhandari", "Sushila Karki", "Onasari Gharti Magar", "Pushpa Kamal Dahal"] },
+            { qh: "दुनिया के सबसे उम्रदराज राष्ट्रपति 'पॉल बिया' (92 वर्ष) किस देश के राष्ट्रपति चुने गए हैं?", qe: "The world's oldest president 'Paul Biya' (92 years) has been elected president of which country?", ah: "कैमरून", ae: "Cameroon", oh: ["नाईजीरिया", "इथियोपिया", "कैमरून", "घाना"], oe: ["Nigeria", "Ethiopia", "Cameroon", "Ghana"] },
+            { qh: "दुनिया के किस देश ने अपना पहला सौर तापीय ऊर्जा संयंत्र शुरू किया है?", qe: "Which country has started its first solar thermal power plant?", ah: "चीन", ae: "China", oh: ["अमेरिका", "चीन", "भारत", "जर्मनी"], oe: ["USA", "China", "India", "Germany"] },
+            { qh: "भारत के किस पड़ोसी देश की अदालत ने पूर्व प्रधानमंत्री को मौत की सजा सुनाई है?", qe: "The court of which neighboring country of India has sentenced the former PM to death?", ah: "बांग्लादेश", ae: "Bangladesh", oh: ["पाकिस्तान", "म्यांमार", "बांग्लादेश", "श्रीलंका"], oe: ["Pakistan", "Myanmar", "Bangladesh", "Sri Lanka"] },
+            { qh: "सबसे गहरे पानी के नीचे विश्व की प्रयोगशाला कौन सा देश बनाएगा?", qe: "Which country will build the world's deepest underwater laboratory?", ah: "भारत", ae: "India", oh: ["अमेरिका", "रूस", "चीन", "भारत"], oe: ["USA", "Russia", "China", "India"] },
+            { qh: "'विश्व शांति एवं सुरक्षा के लिए 2025 का विश्व नेता' पुरस्कार किसे दिया गया?", qe: "Who was given the 'World Leader for World Peace and Security 2025' award?", ah: "श्री-श्री रवि शंकर", ae: "Sri Sri Ravi Shankar", oh: ["दलाई लामा", "श्री-श्री रवि शंकर", "सद्गुरु जग्गी वासुदेव", "बाबा रामदेव"], oe: ["Dalai Lama", "Sri Sri Ravi Shankar", "Sadhguru", "Baba Ramdev"] },
+            { qh: "वित्तीय वर्ष 2024-25 में भारत ने किस देश से सबसे ज्यादा FDI प्राप्त किया?", qe: "From which country did India receive the highest FDI in FY 2024-25?", ah: "सिंगापुर", ae: "Singapore", oh: ["मॉरीशस", "अमेरिका", "सिंगापुर", "यूएई"], oe: ["Mauritius", "USA", "Singapore", "UAE"] },
+            { qh: "एशिया का सबसे सुरक्षित बैंक का खिताब किस बैंक को दिया गया?", qe: "Which bank was given the title of the safest bank in Asia?", ah: "DBS बैंक", ae: "DBS Bank", oh: ["SBI", "DBS बैंक", "HDFC बैंक", "ICICI बैंक"], oe: ["SBI", "DBS Bank", "HDFC Bank", "ICICI Bank"] },
+            { qh: "भारत की पहली विदेशी रक्षा विनिर्माण इकाई किस देश में स्थापित की गई है?", qe: "In which country has India's first foreign defense manufacturing unit been established?", ah: "मोरक्को", ae: "Morocco", oh: ["मिस्र", "मोरक्को", "फ्रांस", "वियतनाम"], oe: ["Egypt", "Morocco", "France", "Vietnam"] },
+            { qh: "किस देश में भारत का पहला विदेशी अटल नवाचार केन्द्र शुरू किया गया?", qe: "In which country was India's first foreign Atal Innovation Centre started?", ah: "संयुक्त अरब अमीरात (UAE)", ae: "United Arab Emirates (UAE)", oh: ["ओमान", "कतर", "संयुक्त अरब अमीरात (UAE)", "कुवैत"], oe: ["Oman", "Qatar", "UAE", "Kuwait"] },
+            { qh: "भारत के किस NGO को रेमन मैग्सेसे पुरस्कार 2025 के लिए चुना गया है?", qe: "Which Indian NGO has been selected for the Ramon Magsaysay Award 2025?", ah: "एजुकेट गर्ल्स", ae: "Educate Girls", oh: ["गूंज", "प्रथम", "एजुकेट गर्ल्स", "स्माइल फाउंडेशन"], oe: ["Goonj", "Pratham", "Educate Girls", "Smile Foundation"] },
+            { qh: "'राइट बैंक' नाम से दुनिया का पहला AI संचालित बैंक किस देश ने लॉन्च किया है?", qe: "Which country has launched the world's first AI-powered bank named 'Right Bank'?", ah: "मलेशिया", ae: "Malaysia", oh: ["जापान", "मलेशिया", "सिंगापुर", "चीन"], oe: ["Japan", "Malaysia", "Singapore", "China"] },
+            { qh: "दक्षिण पूर्व एशिया का पहला देश कौन सा है जो रूबेला से मुक्त घोषित हुआ है?", qe: "Which is the first SE Asian country declared Rubella-free?", ah: "नेपाल", ae: "Nepal", oh: ["भूटान", "श्रीलंका", "नेपाल", "थाईलैंड"], oe: ["Bhutan", "Sri Lanka", "Nepal", "Thailand"] },
+            { qh: "विश्व का दूसरा सबसे बड़ा कोयला उपभोक्ता देश कौन बना है?", qe: "Which has become the world's second largest coal consumer?", ah: "भारत", ae: "India", oh: ["अमेरिका", "भारत", "ऑस्ट्रेलिया", "रूस"], oe: ["USA", "India", "Australia", "Russia"] },
+            { qh: "हाल ही में कौन सा देश परमाणु संधि (Nuclear Treaty) से बाहर निकल गया है?", qe: "Which country recently pulled out of a Nuclear Treaty?", ah: "रूस", ae: "Russia", oh: ["उत्तर कोरिया", "ईरान", "रूस", "अमेरिका"], oe: ["North Korea", "Iran", "Russia", "USA"] },
+            { qh: "2025 का सबसे ज्यादा खाद्य असुरक्षित देश किसे घोषित किया गया?", qe: "Which was declared the most food insecure country of 2025?", ah: "अफगानिस्तान", ae: "Afghanistan", oh: ["यमन", "सूड़ान", "सोमालिया", "अफगानिस्तान"], oe: ["Yemen", "Sudan", "Somalia", "Afghanistan"] },
+            { qh: "पेट्रोल में 20% इथेनॉल मिश्रण का लक्ष्य किस देश ने पूरा किया है?", qe: "Which country has completed the target of 20% ethanol blending in petrol?", ah: "भारत", ae: "India", oh: ["ब्राजील", "भारत", "अमेरिका", "इंडोनेशिया"], oe: ["Brazil", "India", "USA", "Indonesia"] },
+            { qh: "सहकारी क्षेत्र में दुनिया की सबसे बड़ी अनाज भंडारण योजना किस देश ने प्रारंभ की है?", qe: "Which country has started the world's largest grain storage scheme in the cooperative sector?", ah: "भारत", ae: "India", oh: ["चीन", "अमेरिका", "भारत", "रूस"], oe: ["China", "USA", "India", "Russia"] },
+            { qh: "किस क्रिएटर को 'ग्लोबल बेस्ट मैजिक क्रिएटर 2025' से नवाजा गया है?", qe: "Which creator has been awarded 'Global Best Magic Creator 2025'?", ah: "सुहानी शाह", ae: "Suhani Shah", oh: ["सुहानी शाह", "जादूगर आनंद", "पी.सी. सरकार", "डाइनमो"], oe: ["Suhani Shah", "Jadugar Anand", "P.C. Sorcar", "Dynamo"] },
+            { qh: "किस देश के वैज्ञानिकों ने कार्बन डाइऑक्साइड ($CO_2$) को भोजन में सफलतापूर्वक परिवर्तित किया है?", qe: "Scientists of which country successfully converted CO2 into food?", ah: "चीन", ae: "China", oh: ["अमेरिका", "चीन", "जापान", "इज़राइल"], oe: ["USA", "China", "Japan", "Israel"] },
+            { qh: "2025 का विश्व का सर्वश्रेष्ठ उपभोक्ता बैंक किसे चुना गया?", qe: "Which was chosen as the World's Best Consumer Bank 2025?", ah: "SBI", ae: "SBI", oh: ["HDFC बैंक", "SBI", "PNB", "केनरा बैंक"], oe: ["HDFC Bank", "SBI", "PNB", "Canara Bank"] },
+            { qh: "दुनिया का कौन-सा देश हाल ही में यूनेस्को (UNESCO) से बाहर हो गया है?", qe: "Which country recently withdrew from UNESCO?", ah: "अमेरिका", ae: "USA", oh: ["इज़राइल", "अमेरिका", "रूस", "ईरान"], oe: ["Israel", "USA", "Russia", "Iran"] }
+        ];
+
+        let currentLang = 'hi';
+        let shuffledQuestions = [];
+        let currentIndex = 0;
+        let userAnswers = new Array(30).fill(null);
+        let timeLeft = 30 * 60; 
+        let timerInterval;
+
+        const uiLabels = {
+            hi: { timer: "समय:", qLabel: "प्रश्न", prev: "पिछला", next: "अगला", mTitle: "अंतिम चरण", lName: "पूरा नाम", lExam: "परीक्षा", btnGen: "सबमिट करें", resName: "नाम", resExam: "परीक्षा श्रेणी", revTitle: "विस्तृत विश्लेषण", revCorrect: "सही उत्तर", revYour: "आपका उत्तर" },
+            en: { timer: "Time:", qLabel: "Question", prev: "Previous", next: "Next", mTitle: "Final Step", lName: "Full Name", lExam: "Exam", btnGen: "Submit Results", resName: "Student", resExam: "Category", revTitle: "Detailed Analysis", revCorrect: "Correct Ans", revYour: "Your Ans" }
+        };
+
+        function toggleLanguage() {
+            currentLang = (currentLang === 'hi' ? 'en' : 'hi');
+            document.getElementById('lang-text').textContent = (currentLang === 'hi' ? 'English' : 'हिंदी');
+            updateUI();
+        }
+
+        function updateUI() {
+            const labels = uiLabels[currentLang];
+            document.getElementById('timer-label').textContent = labels.timer;
+            document.getElementById('q-label').textContent = labels.qLabel;
+            document.getElementById('prev-text').textContent = labels.prev;
+            document.getElementById('next-text').textContent = labels.next;
+            document.getElementById('modal-title').textContent = labels.mTitle;
+            document.getElementById('label-name').textContent = labels.lName;
+            document.getElementById('label-exam').textContent = labels.lExam;
+            document.getElementById('btn-gen').textContent = labels.btnGen;
+            document.getElementById('review-title').textContent = labels.revTitle;
+            displayQuestion();
+        }
+
+        function init() {
+            shuffledQuestions = questionsData.map(q => {
+                const idxs = [0,1,2,3].sort(()=>Math.random()-0.5);
+                return { ...q, oh: idxs.map(i=>q.oh[i]), oe: idxs.map(i=>q.oe[i]) };
+            }).sort(()=>Math.random()-0.5);
+            renderPalette();
+            updateUI();
+            startTimer();
+        }
+
+        function renderPalette() {
+            const cont = document.getElementById('palette-container');
+            cont.innerHTML = '';
+            for(let i=0; i<30; i++) {
+                const b = document.createElement('button');
+                b.textContent = i+1;
+                b.id = `pal-${i}`;
+                b.className = "w-10 h-10 rounded-lg border-2 text-sm font-bold border-slate-200 text-slate-400";
+                b.onclick = () => { currentIndex = i; displayQuestion(); };
+                cont.appendChild(b);
+            }
+        }
+
+        function displayQuestion() {
+            const q = shuffledQuestions[currentIndex];
+            document.getElementById('current-q-num').textContent = currentIndex+1;
+            document.getElementById('question-text').textContent = currentLang==='hi' ? q.qh : q.qe;
+            const optCont = document.getElementById('options-container');
+            optCont.innerHTML = '';
+            const opts = currentLang==='hi' ? q.oh : q.oe;
+            opts.forEach((o, i) => {
+                const isSel = userAnswers[currentIndex] === q.oh[i];
+                optCont.innerHTML += `
+                    <label class="flex items-center p-4 rounded-xl border-2 cursor-pointer transition ${isSel?'bg-blue-50 border-blue-500':'border-slate-200 hover:border-blue-300'}">
+                        <input type="radio" class="hidden" name="opt" onchange="userAnswers[${currentIndex}]='${q.oh[i].replace(/'/g,"\\'")}'; displayQuestion();">
+                        <span class="w-8 h-8 rounded-full border flex items-center justify-center mr-4 text-xs font-bold ${isSel?'bg-blue-600 text-white':'bg-white'}">${String.fromCharCode(65+i)}</span>
+                        ${o}
+                    </label>
+                `;
+            });
+            document.getElementById('prev-btn').disabled = currentIndex === 0;
+            // Palette UI Update
+            for(let i=0; i<30; i++) {
+                const b = document.getElementById(`pal-${i}`);
+                b.classList.remove('active', 'answered');
+                if(i===currentIndex) b.classList.add('active');
+                if(userAnswers[i]!==null) b.classList.add('answered');
+            }
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                const m = Math.floor(timeLeft/60), s = timeLeft%60;
+                document.getElementById('timer').textContent = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+                if(timeLeft-- <= 0) { clearInterval(timerInterval); showInfoModal(); }
+            }, 1000);
+        }
+
+        function confirmSubmit() { if(confirm("Submit Test?")) { clearInterval(timerInterval); showInfoModal(); } }
+        function showInfoModal() { document.getElementById('info-modal').classList.remove('hidden'); }
+
+        function generateResult() {
+            const name = document.getElementById('user-name').value;
+            if(!name) return alert("Name required");
+            let score = 0;
+            const rev = document.getElementById('review-container');
+            rev.innerHTML = '';
+            shuffledQuestions.forEach((q, i) => {
+                const u = userAnswers[i], cor = q.ah, isCor = u === cor;
+                if(isCor) score++;
+                const card = document.createElement('div');
+                card.className = `review-card p-5 rounded-2xl border ${u===null?'unanswered':(isCor?'correct':'incorrect')}`;
+                
+                const uIdx = q.oh.indexOf(u);
+                const cIdx = q.oh.indexOf(cor);
+                const uDisplay = u===null ? "N/A" : (currentLang==='hi'?q.oh[uIdx]:q.oe[uIdx]);
+                const cDisplay = (currentLang==='hi'?q.oh[cIdx]:q.oe[cIdx]);
+
+                card.innerHTML = `
+                    <p class="font-bold text-slate-800 mb-3">${i+1}. ${currentLang==='hi'?q.qh:q.qe}</p>
+                    <div class="grid grid-cols-2 gap-4 text-xs">
+                        <div class="p-2 bg-white rounded border">
+                            <p class="text-slate-400 font-bold">${uiLabels[currentLang].revYour}</p>
+                            <p class="font-bold ${isCor?'text-green-600':'text-red-600'}">${uDisplay}</p>
+                        </div>
+                        <div class="p-2 bg-white rounded border">
+                            <p class="text-slate-400 font-bold">${uiLabels[currentLang].revCorrect}</p>
+                            <p class="font-bold text-green-600">${cDisplay}</p>
+                        </div>
+                    </div>
+                `;
+                rev.appendChild(card);
+            });
+            document.getElementById('res-score').textContent = score;
+            document.getElementById('res-acc').textContent = Math.round((score/30)*100) + '%';
+            document.getElementById('res-name').textContent = name;
+            document.getElementById('res-exam-cat').textContent = document.getElementById('user-exam').value;
+            document.getElementById('info-modal').classList.add('hidden');
+            document.getElementById('result-view').classList.remove('hidden');
+        }
+
+        function nextQuestion() { currentIndex < 29 ? (currentIndex++, displayQuestion()) : confirmSubmit(); }
+        function prevQuestion() { if(currentIndex > 0) { currentIndex--; displayQuestion(); } }
+        function shareToWhatsapp() {
+            const score = document.getElementById('res-score').textContent;
+            window.open(`https://wa.me/919504111765?text=I scored ${score}/30 in International Affairs Test 2025!`);
+        }
+        window.onload = init;
+    </script>
+</body>
+</html>
