@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>30 National Current Affairs - Concept ki Pathshala</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .sticky-panel { position: sticky; top: 1rem; }
+        .question-btn.active { background-color: #2563eb; color: white; border-color: #2563eb; }
+        .question-btn.answered { background-color: #10b981; color: white; border-color: #10b981; }
+        .option-label { transition: all 0.2s; cursor: pointer; }
+        .option-input:checked + .option-label { background-color: #dbeafe; border-color: #3b82f6; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="bg-blue-600 p-1.5 rounded-lg text-white">
+                    <i class="fas fa-pen-nib"></i>
+                </div>
+                <span class="font-bold text-slate-800 text-lg hidden md:block">Concept ki Pathshala</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="text-slate-600 font-medium">
+                    <i class="far fa-clock mr-2"></i>Time Left: <span id="timer" class="text-blue-600 font-bold">30:00</span>
+                </div>
+                <button onclick="confirmSubmit()" class="bg-red-600 text-white px-4 py-1.5 rounded-lg font-bold hover:bg-red-700 transition text-sm">
+                    Submit Test
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <div class="grid lg:grid-cols-4 gap-8">
+            
+            <!-- Left Side: Question Display -->
+            <div class="lg:col-span-3 space-y-6">
+                <div id="quiz-container" class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200">
+                    <div class="flex justify-between items-center mb-6">
+                        <span class="text-blue-600 font-bold uppercase tracking-wider text-sm">Question <span id="current-q-num">1</span> of 30</span>
+                        <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold">1 Mark</span>
+                    </div>
+                    
+                    <h2 id="question-text" class="text-xl md:text-2xl font-bold text-slate-800 mb-8 leading-snug"></h2>
+                    
+                    <div id="options-container" class="space-y-4">
+                        <!-- Options will be injected here -->
+                    </div>
+
+                    <div class="flex justify-between items-center mt-10 pt-6 border-t border-slate-100">
+                        <button onclick="prevQuestion()" id="prev-btn" class="flex items-center text-slate-500 font-bold hover:text-blue-600 disabled:opacity-30">
+                            <i class="fas fa-chevron-left mr-2"></i> Previous
+                        </button>
+                        <button onclick="nextQuestion()" id="next-btn" class="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-200 transition">
+                            Save & Next <i class="fas fa-chevron-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Navigation Panel -->
+            <div class="lg:col-span-1">
+                <div class="sticky-panel space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                        <h3 class="font-bold text-slate-800 mb-4 flex items-center">
+                            <i class="fas fa-th mr-2 text-blue-500"></i> Question Palette
+                        </h3>
+                        <div id="palette-container" class="grid grid-cols-5 gap-2">
+                            <!-- Buttons will be injected here -->
+                        </div>
+                        <div class="mt-6 space-y-2 text-xs font-medium">
+                            <div class="flex items-center"><span class="w-3 h-3 bg-blue-600 rounded-sm mr-2"></span> Current</div>
+                            <div class="flex items-center"><span class="w-3 h-3 bg-emerald-500 rounded-sm mr-2"></span> Answered</div>
+                            <div class="flex items-center"><span class="w-3 h-3 bg-slate-200 rounded-sm mr-2"></span> Not Visited</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-blue-50 p-6 rounded-2xl border border-blue-100">
+                        <h4 class="font-bold text-blue-800 mb-2">Instructions</h4>
+                        <ul class="text-xs text-blue-700 space-y-2">
+                            <li>• Every correct answer gives +1 mark.</li>
+                            <li>• No negative marking for this session.</li>
+                            <li>• Test will auto-submit after 30 mins.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal for User Info (Shown before results) -->
+    <div id="info-modal" class="fixed inset-0 bg-slate-900/80 z-[100] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl">
+            <h2 class="text-2xl font-bold text-slate-800 mb-2">Almost Done!</h2>
+            <p class="text-slate-500 mb-6">Enter your details to generate your score card.</p>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1">Full Name</label>
+                    <input type="text" id="user-name" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Enter your name">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1">Targeted Exam</label>
+                    <select id="user-exam" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 outline-none">
+                        <option>SSC GD / CGL</option>
+                        <option>Railway / NTPC</option>
+                        <option>Bihar Police / Daroga</option>
+                        <option>Indian Army</option>
+                        <option>Other Govt Exams</option>
+                    </select>
+                </div>
+                <button onclick="generateResult()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold hover:bg-blue-700 transition mt-4">
+                    View My Result
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Result View -->
+    <div id="result-view" class="fixed inset-0 bg-slate-50 z-[110] hidden overflow-y-auto">
+        <div class="max-w-3xl mx-auto px-4 py-12">
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-200">
+                <div class="bg-blue-600 p-10 text-center text-white">
+                    <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-trophy text-4xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold mb-1">Performance Report</h2>
+                    <p class="text-blue-100">Concept ki Pathshala</p>
+                </div>
+                
+                <div class="p-8">
+                    <div class="grid grid-cols-2 gap-4 mb-8">
+                        <div class="bg-slate-50 p-4 rounded-2xl text-center">
+                            <p class="text-slate-500 text-xs font-bold uppercase mb-1">Score</p>
+                            <p class="text-3xl font-black text-slate-800"><span id="res-score">0</span> / 30</p>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-2xl text-center">
+                            <p class="text-slate-500 text-xs font-bold uppercase mb-1">Accuracy</p>
+                            <p class="text-3xl font-black text-slate-800" id="res-acc">0%</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4 mb-10">
+                        <div class="flex justify-between py-3 border-b border-slate-100">
+                            <span class="text-slate-500">Student Name</span>
+                            <span class="font-bold text-slate-800" id="res-name">-</span>
+                        </div>
+                        <div class="flex justify-between py-3 border-b border-slate-100">
+                            <span class="text-slate-500">Exam Category</span>
+                            <span class="font-bold text-slate-800" id="res-exam-cat">-</span>
+                        </div>
+                        <div class="flex justify-between py-3 border-b border-slate-100">
+                            <span class="text-slate-500">Date</span>
+                            <span class="font-bold text-slate-800" id="res-date">-</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <button onclick="downloadResult()" class="flex items-center justify-center bg-slate-800 text-white py-4 rounded-xl font-bold hover:bg-slate-900 transition">
+                            <i class="fas fa-download mr-2"></i> Download PDF
+                        </button>
+                        <button onclick="shareToWhatsapp()" class="flex items-center justify-center bg-green-600 text-white py-4 rounded-xl font-bold hover:bg-green-700 transition">
+                            <i class="fab fa-whatsapp mr-2"></i> Share Result
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-8">
+                <a href="index.html" class="text-blue-600 font-bold hover:underline">Return to Home</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questionsData = [
+            { q: "वरिष्ठ नागरिकों और दिव्यांगों के लिए भारत का पहला 'ग्रे स्मार्ट टॉयलेट' कहाँ बनाया गया है?", a: "देहरादून (उत्तराखंड)", o: ["ऋषिकेश", "देहरादून (उत्तराखंड)", "शिमला", "चंडीगढ़"] },
+            { q: "अनुसूचित जाति आयोग द्वारा किस राज्य में अलग 'कोर्ट रूम' स्थापित किया गया है?", a: "पंजाब", o: ["हरियाणा", "राजस्थान", "पंजाब", "उत्तर प्रदेश"] },
+            { q: "साइबर धोखाधड़ी कॉल सेंटर में 100% प्रतिक्रिया दर (Response Rate) हासिल करने वाली भारत की पहली पुलिस कौन सी है?", a: "गोवा पुलिस", o: ["दिल्ली पुलिस", "गोवा पुलिस", "मुंबई पुलिस", "केरल पुलिस"] },
+            { q: "संशोधित 'भारत नेट योजना' को लागू करने वाला देश का प्रथम राज्य कौन सा है?", a: "पंजाब", o: ["गुजरात", "महाराष्ट्र", "पंजाब", "कर्नाटक"] },
+            { q: "हेलीकॉप्टर पर्यटन सेवा शुरू करने वाला भारत का पहला राज्य कौन सा बना है?", a: "मध्य प्रदेश", o: ["उत्तराखंड", "मध्य प्रदेश", "हिमाचल प्रदेश", "सिक्किम"] },
+            { q: "शहरी सार्वजनिक परिवहन के लिए रोपवे (Ropeway) सेवा शुरू करने वाला भारत का पहला शहर कौन सा है?", a: "वाराणसी", o: ["शिमला", "हरिद्वार", "वाराणसी", "गुवाहाटी"] },
+            { q: "रेलवे पटरियों के बीच पोर्टेबल सोलर पैनल स्थापित करने वाला भारत का पहला शहर कौन सा है?", a: "वाराणसी", o: ["इंदौर", "वाराणसी", "बेंगलुरु", "सूरत"] },
+            { q: "किस राज्य सरकार ने हाल ही में मदरसा बोर्ड को खत्म करने का फैसला किया है?", a: "उत्तराखंड", o: ["असम", "उत्तर प्रदेश", "उत्तराखंड", "मध्य प्रदेश"] },
+            { q: "राष्ट्रपति द्रौपदी मुर्मू ने अपने कार्यकाल में पहली बार किस राज्य की विधानसभा को संबोधित किया?", a: "ओडिशा", o: ["झारखंड", "ओडिशा", "बिहार", "छत्तीसगढ़"] },
+            { q: "100 ट्रिलियन रुपये का कुल कारोबार पार करने वाला भारत का पहला बैंक कौन सा है?", a: "स्टेट बैंक ऑफ इंडिया (SBI)", o: ["HDFC बैंक", "ICICI बैंक", "स्टेट बैंक ऑफ इंडिया (SBI)", "पंजाब नेशनल बैंक"] },
+            { q: "भारत के 53वें मुख्य न्यायाधीश (CJI) के रूप में किसे नियुक्त किया गया है?", a: "न्यायूमूर्ति सूर्यकांत", o: ["न्यायमूर्ति डी.वाई. चंद्रचूड़", "न्यायूमूर्ति संजीव खन्ना", "न्यायूमूर्ति सूर्यकांत", "न्यायूमूर्ति बी.आर. गवई"] },
+            { q: "नवीनतम NCRB रिपोर्ट के अनुसार, भारत का सबसे सुरक्षित शहर कौन सा घोषित किया गया है?", a: "कोलकाता", o: ["पुणे", "चेन्नई", "कोलकाता", "हैदराबाद"] },
+            { q: "भारत का पहला 'झुग्गी मुक्त शहर' (Slum-Free City) होने का दर्जा किस शहर को मिला है?", a: "चंडीगढ़", o: ["नवी मुंबई", "इंदौर", "चंडीगढ़", "गांधीनगर"] },
+            { q: "किस राज्य ने हाल ही में 'धर्मान्तरण विरोधी विधेयक 2025' पारित किया है?", a: "राजस्थान", o: ["मध्य प्रदेश", "गुजरात", "राजस्थान", "हरियाणा"] },
+            { q: "'नो हेलमेट, नो फ्यूल' (No Helmet, No Fuel) अभियान किस राज्य में सख्ती से शुरू किया गया है?", a: "उत्तर प्रदेश", o: ["बिहार", "उत्तर प्रदेश", "दिल्ली", "पंजाब"] },
+            { q: "PATA (Pacific Asia Travel Association) गोल्ड अवार्ड 2025 किस राज्य के पर्यटन विभाग ने जीता है?", a: "केरल पर्यटन", o: ["गोवा पर्यटन", "राजस्थान पर्यटन", "केरल पर्यटन", "लद्दाख पर्यटन"] },
+            { q: "भारत के किस राज्य में महिलाओं के मुद्दों के लिए 'नारी अदालत' की शुरुआत की गई है?", a: "सिक्किम", o: ["असम", "सिक्किम", "मेघालय", "त्रिपुरा"] },
+            { q: "सौर ऊर्जा से पूरी तरह संचालित होने वाली भारत की पहली विधानसभा कौन सी है?", a: "दिल्ली विधानसभा", o: ["गुजरात विधानसभा", "दिल्ली विधानसभा", "केरल विधानसभा", "गोवा विधानसभा"] },
+            { q: "आर्टिफिशियल इंटेलिजेंस (AI) से संचालित भारत की पहली आंगनवाड़ी किस राज्य में शुरू हुई है?", a: "महाराष्ट्र", o: ["कर्नाटक", "तमिलनाडु", "महाराष्ट्र", "तेलंगाना"] },
+            { q: "भारत में सबसे अधिक अंगदान (Organ Donation) करने के लिए किस राज्य को पुरस्कार मिला है?", a: "तेलंगाना", o: ["तमिलनाडु", "तेलंगाना", "गुजरात", "केरल"] },
+            { q: "भारत की पहली हाइड्रोजन-संचालित ट्रेन कोच का सफल परीक्षण कहाँ किया गया?", a: "चेन्नई", o: ["कपूरथला", "चेन्नई", "रायबरेली", "बेंगलुरु"] },
+            { q: "हाल ही में 4500 वर्ष पुरानी हड़प्पा सभ्यता के अवशेष किस स्थान पर मिले हैं?", a: "जैसलमेर (राजस्थान)", o: ["राखीगढ़ी (हरियाणा)", "जैसलमेर (राजस्थान)", "धोलावीरा (गुजरात)", "रोपड़ (पंजाब)"] },
+            { q: "किस राज्य ने देवदासी प्रथा को पूरी तरह खत्म करने के लिए नया कानून प्रस्तावित किया है?", a: "कर्नाटक", o: ["आंध्र प्रदेश", "कर्नाटक", "तमिलनाडु", "ओडिशा"] },
+            { q: "इग्नू (IGNOU) की पहली महिला कुलपति (Vice-Chancellor) कौन बनी हैं?", a: "प्रो. उमा कांजीलाल", o: ["प्रो. नजमा अख्तर", "प्रो. उमा कांजीलाल", "प्रो. शांतिश्री धूलिपुड़ी", "प्रो. सुधीर जैन"] },
+            { q: "भारत के पहले 'एक्वा टेक पार्क' की स्थापना किस राज्य में की जा रही है?", a: "असम", o: ["पश्चिम बंगाल", "असम", "ओडिशा", "आंध्र प्रदेश"] },
+            { q: "भारत का पहला 'AI-प्लस कैंपस' कहाँ खोला जाएगा?", a: "अमरावती", o: ["हैदराबाद", "अमरावती", "बेंगलुरु", "नोएडा"] },
+            { q: "भारत का पहला 'डिजिटल घुमंतू गांव' (Digital Nomad Village) 'याकतेन' किस राज्य में स्थित है?", a: "सिक्किम", o: ["हिमाचल प्रदेश", "सिक्किम", "उत्तराखंड", "अरुणाचल प्रदेश"] },
+            { q: "भारत का पहला ISO प्रमाणित पुलिस स्टेशन कौन सा बना है?", a: "आर्थुंकल पुलिस स्टेशन (केरल)", o: ["कालूपुर पुलिस स्टेशन (गुजरात)", "आर्थुंकल पुलिस स्टेशन (केरल)", "कोहिमा पुलिस स्टेशन (नागालैंड)", "मिंटो रोड पुलिस स्टेशन (दिल्ली)"] },
+            { q: "'Time 100 क्रिएटर्स-2025' की सूची में शामिल होने वाली प्रथम भारतीय महिला कौन हैं?", a: "प्राजक्ता कोली", o: ["कुशा कपिला", "प्राजक्ता कोली", "डॉली सिंह", "रणवीर अल्लाहबादिया"] },
+            { q: "ड्रोन प्रशिक्षण के लिए असम राइफल्स ने किस संस्थान के साथ समझौता किया है?", a: "IIIT मणिपुर", o: ["IIT बॉम्बे", "IIIT मणिपुर", "NIT सिलचर", "BITS पिलानी"] }
+        ];
+
+        let shuffledQuestions = [];
+        let currentIndex = 0;
+        let userAnswers = new Array(30).fill(null);
+        let timeLeft = 30 * 60; // 30 minutes
+
+        // Shuffle questions and options on load
+        function initQuiz() {
+            shuffledQuestions = questionsData.map(q => {
+                const options = [...q.o].sort(() => Math.random() - 0.5);
+                return { ...q, o: options };
+            }).sort(() => Math.random() - 0.5);
+            
+            renderPalette();
+            displayQuestion();
+            startTimer();
+        }
+
+        function renderPalette() {
+            const container = document.getElementById('palette-container');
+            container.innerHTML = '';
+            for (let i = 0; i < 30; i++) {
+                const btn = document.createElement('button');
+                btn.textContent = i + 1;
+                btn.className = `question-btn w-10 h-10 rounded-lg border-2 text-sm font-bold transition-all ${userAnswers[i] ? 'answered' : 'border-slate-200 text-slate-400'}`;
+                btn.id = `palette-btn-${i}`;
+                btn.onclick = () => jumpToQuestion(i);
+                container.appendChild(btn);
+            }
+            updatePaletteUI();
+        }
+
+        function updatePaletteUI() {
+            for (let i = 0; i < 30; i++) {
+                const btn = document.getElementById(`palette-btn-${i}`);
+                btn.classList.remove('active');
+                if (i === currentIndex) btn.classList.add('active');
+                if (userAnswers[i] !== null) {
+                    btn.classList.add('answered');
+                }
+            }
+        }
+
+        function displayQuestion() {
+            const q = shuffledQuestions[currentIndex];
+            document.getElementById('current-q-num').textContent = currentIndex + 1;
+            document.getElementById('question-text').textContent = q.q;
+            
+            const optionsBox = document.getElementById('options-container');
+            optionsBox.innerHTML = '';
+            
+            q.o.forEach((opt, idx) => {
+                const div = document.createElement('div');
+                const isChecked = userAnswers[currentIndex] === opt ? 'checked' : '';
+                div.innerHTML = `
+                    <input type="radio" name="answer" id="opt-${idx}" value="${opt}" class="hidden option-input" ${isChecked} onchange="saveAnswer('${opt}')">
+                    <label for="opt-${idx}" class="option-label flex items-center p-4 rounded-xl border-2 border-slate-200 hover:border-blue-400 font-medium text-slate-700">
+                        <span class="w-8 h-8 rounded-full border-2 border-slate-300 flex items-center justify-center mr-4 text-xs font-bold bg-white">${String.fromCharCode(65 + idx)}</span>
+                        ${opt}
+                    </label>
+                `;
+                optionsBox.appendChild(div);
+            });
+
+            document.getElementById('prev-btn').disabled = currentIndex === 0;
+            document.getElementById('next-btn').innerHTML = currentIndex === 29 ? 'Final Review <i class="fas fa-check-double ml-2"></i>' : 'Save & Next <i class="fas fa-chevron-right ml-2"></i>';
+            updatePaletteUI();
+        }
+
+        function saveAnswer(val) {
+            userAnswers[currentIndex] = val;
+            updatePaletteUI();
+        }
+
+        function nextQuestion() {
+            if (currentIndex < 29) {
+                currentIndex++;
+                displayQuestion();
+            } else {
+                confirmSubmit();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                displayQuestion();
+            }
+        }
+
+        function jumpToQuestion(idx) {
+            currentIndex = idx;
+            displayQuestion();
+        }
+
+        function startTimer() {
+            const timerEl = document.getElementById('timer');
+            const interval = setInterval(() => {
+                const mins = Math.floor(timeLeft / 60);
+                const secs = timeLeft % 60;
+                timerEl.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(interval);
+                    autoSubmit();
+                }
+                timeLeft--;
+            }, 1000);
+        }
+
+        function confirmSubmit() {
+            const answeredCount = userAnswers.filter(a => a !== null).length;
+            const msg = `You have answered ${answeredCount} out of 30 questions. Do you want to submit?`;
+            if (confirm(msg)) {
+                showInfoModal();
+            }
+        }
+
+        function autoSubmit() {
+            alert('Time is up! Your test is being submitted automatically.');
+            showInfoModal();
+        }
+
+        function showInfoModal() {
+            document.getElementById('info-modal').classList.remove('hidden');
+        }
+
+        function generateResult() {
+            const name = document.getElementById('user-name').value.trim();
+            if (!name) return alert('Please enter your name');
+
+            let score = 0;
+            userAnswers.forEach((ans, i) => {
+                if (ans === shuffledQuestions[i].a) {
+                    score++;
+                }
+            });
+
+            const accuracy = Math.round((score / 30) * 100);
+            
+            // Populate result view
+            document.getElementById('res-name').textContent = name;
+            document.getElementById('res-score').textContent = score;
+            document.getElementById('res-acc').textContent = accuracy + '%';
+            document.getElementById('res-exam-cat').textContent = document.getElementById('user-exam').value;
+            document.getElementById('res-date').textContent = new Date().toLocaleDateString('hi-IN');
+            
+            document.getElementById('info-modal').classList.add('hidden');
+            document.getElementById('result-view').classList.remove('hidden');
+        }
+
+        function shareToWhatsapp() {
+            const name = document.getElementById('res-name').textContent;
+            const score = document.getElementById('res-score').textContent;
+            const exam = document.getElementById('res-exam-cat').textContent;
+            const text = `*Concept ki Pathshala - Result Report*%0A---------------------------%0A*Name:* ${name}%0A*Score:* ${score}/30%0A*Exam:* ${exam}%0A*Result:* ${score >= 15 ? 'Passed ✅' : 'Need Improvement ❌'}%0A---------------------------%0A_Proudly generated by Pathshala Test Portal_`;
+            
+            window.open(`https://wa.me/919504111765?text=${text}`);
+        }
+
+        function downloadResult() {
+            window.print();
+        }
+
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>
