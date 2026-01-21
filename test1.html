@@ -41,7 +41,7 @@
                     <span id="lang-text">English</span>
                 </button>
                 <div class="text-slate-600 font-medium text-sm md:text-base">
-                    <i class="far fa-clock mr-1"></i><span id="timer-label">Time:</span> <span id="timer" class="text-blue-600 font-bold">30:00</span>
+                    <i class="far fa-clock mr-1"></i><span id="timer-label">Time:</span> <span id="timer" class="text-blue-600 font-bold">20:00</span>
                 </div>
                 <button onclick="confirmSubmit()" class="bg-red-600 text-white px-3 md:px-4 py-1.5 rounded-lg font-bold hover:bg-red-700 transition text-sm">
                     Submit
@@ -217,7 +217,7 @@
         let shuffledQuestions = [];
         let currentIndex = 0;
         let userAnswers = new Array(30).fill(null);
-        let timeLeft = 30 * 60; 
+        let timeLeft = 20 * 60; 
         let timerInterval;
 
         const uiLabels = {
