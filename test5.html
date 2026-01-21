@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Physics Quiz - Units & Measurement</title>
+    <title>Physics Quiz - 95 Units & Measurement</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
@@ -20,7 +20,6 @@
         .review-card { border-left: 4px solid #e2e8f0; }
         .review-card.correct { border-left-color: #10b981; background-color: #f0fdf4; }
         .review-card.incorrect { border-left-color: #ef4444; background-color: #fef2f2; }
-        .lang-switch { position: relative; display: inline-flex; background: #f1f5f9; padding: 4px; rounded: 12px; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen">
@@ -54,40 +53,38 @@
             <div class="lg:col-span-3">
                 <div id="quiz-container" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                     <div class="flex justify-between items-center mb-6">
-                        <span class="text-blue-600 font-bold uppercase text-xs tracking-widest"><span id="lbl-q">Question</span> <span id="current-q-num">1</span> / 95</span>
+                        <span class="text-blue-600 font-bold uppercase text-xs tracking-widest"><span id="lbl-q">प्रशन</span> <span id="current-q-num">1</span> / 95</span>
                         <span class="text-slate-400 text-xs font-bold">PHYSICS: UNITS & MEASUREMENT</span>
                     </div>
                     <h2 id="question-text" class="text-xl font-bold text-slate-800 mb-8 min-h-[3rem]"></h2>
                     <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
                     <div class="flex justify-between mt-10 pt-6 border-t">
                         <button onclick="prevQuestion()" id="prev-btn" class="text-slate-500 font-bold hover:text-blue-600 disabled:opacity-30">
-                            <i class="fas fa-arrow-left mr-2"></i> <span id="lbl-prev">Previous</span>
+                            <i class="fas fa-arrow-left mr-2"></i> <span id="lbl-prev">पिछला</span>
                         </button>
                         <button onclick="nextQuestion()" id="next-btn" class="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-700 shadow-lg transition">
-                            <span id="next-text">Next</span> <i class="fas fa-arrow-right ml-2"></i>
+                            <span id="next-text">अगला</span> <i class="fas fa-arrow-right ml-2"></i>
                         </button>
                     </div>
                 </div>
             </div>
             <div class="lg:col-span-1">
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 sticky-panel">
-                    <h3 class="font-bold text-slate-800 mb-4 text-sm uppercase" id="lbl-palette">Question Palette</h3>
+                    <h3 class="font-bold text-slate-800 mb-4 text-sm uppercase" id="lbl-palette">प्रश्न पैलेट</h3>
                     <div id="palette-container" class="grid grid-cols-5 gap-2 max-h-[400px] overflow-y-auto pr-2"></div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Info Modal -->
     <div id="info-modal" class="fixed inset-0 bg-slate-900/80 z-[100] hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl text-center">
-            <h2 class="text-2xl font-bold mb-4" id="lbl-finish">Finish Quiz</h2>
-            <input type="text" id="user-name" placeholder="Enter your name" class="w-full px-4 py-3 rounded-xl border mb-4 outline-none focus:ring-2 ring-blue-500">
-            <button onclick="generateResult()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold hover:bg-blue-700" id="lbl-view-res">View Score Card</button>
+            <h2 class="text-2xl font-bold mb-4" id="lbl-finish">परीक्षा समाप्त</h2>
+            <input type="text" id="user-name" placeholder="अपना नाम लिखें" class="w-full px-4 py-3 rounded-xl border mb-4 outline-none focus:ring-2 ring-blue-500">
+            <button onclick="generateResult()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold hover:bg-blue-700" id="lbl-view-res">स्कोर कार्ड देखें</button>
         </div>
     </div>
 
-    <!-- Result View -->
     <div id="result-view" class="fixed inset-0 bg-slate-50 z-[110] hidden overflow-y-auto">
         <div class="max-w-4xl mx-auto px-4 py-12">
             <div class="bg-white rounded-3xl shadow-xl p-8 mb-8 text-center border">
@@ -95,15 +92,15 @@
                 <p class="text-slate-500 mb-6" id="res-name-display"></p>
                 <div class="grid grid-cols-3 gap-4">
                     <div class="bg-blue-50 p-4 rounded-2xl">
-                        <p class="text-xs text-blue-600 font-bold uppercase" id="lbl-res-score">Score</p>
+                        <p class="text-xs text-blue-600 font-bold uppercase" id="lbl-res-score">स्कोर</p>
                         <p class="text-2xl font-black" id="res-score">0/95</p>
                     </div>
                     <div class="bg-green-50 p-4 rounded-2xl">
-                        <p class="text-xs text-green-600 font-bold uppercase" id="lbl-res-acc">Accuracy</p>
+                        <p class="text-xs text-green-600 font-bold uppercase" id="lbl-res-acc">शुद्धता</p>
                         <p class="text-2xl font-black" id="res-acc">0%</p>
                     </div>
                     <div class="bg-purple-50 p-4 rounded-2xl">
-                        <p class="text-xs text-purple-600 font-bold uppercase" id="lbl-res-att">Attempted</p>
+                        <p class="text-xs text-purple-600 font-bold uppercase" id="lbl-res-att">प्रयास</p>
                         <p class="text-2xl font-black" id="res-attempted">0</p>
                     </div>
                 </div>
@@ -139,16 +136,80 @@
             { q: "कार्य का मात्रक वही होता है, जो ________ का होता है।", q_en: "The unit of work is the same as that of ________.", a: "ऊर्जा", o: ["संवेग", "ऊर्जा", "बल", "त्वरण"], o_en: ["Momentum", "Energy", "Force", "Acceleration"] },
             { q: "निम्नलिखित में से कौन-सी राशि 'क्विंटल' (Quintal) इकाई का उपयोग करके मापी जाती है?", q_en: "Which quantity is measured using the 'Quintal' unit?", a: "द्रव्यमान", o: ["तापमान", "लंबाई", "द्रव्यमान", "आयतन"], o_en: ["Temperature", "Length", "Mass", "Volume"] },
             { q: "घरेलू ऊर्जा खपत को मापने के लिए आमतौर पर विद्युत शक्ति की किस इकाई का उपयोग किया जाता है?", q_en: "Which unit of electric power is usually used to measure domestic energy consumption?", a: "किलोवॉट-घंटा", o: ["एम्पीयर", "वॉट", "किलोवॉट-घंटा", "जूल"], o_en: ["Ampere", "Watt", "Kilowatt-hour", "Joule"] },
-            { q: "बहुत बड़ी दूरियों, जैसे खगोलीय दूरियों, को मापने के लिए SI मात्रक ________ है।", q_en: "The SI unit for measuring very large distances, like astronomical distances, is ________.", a: "प्रकाश वर्ष", o: ["खगोलीय मात्रक", "प्रकाश वर्ष", "किलोमीटर", "मीटर"], o_en: ["Astronomical unit", "Light year", "Kilometer", "Meter"] },
+            { q: "बहुत बड़ी दूरियों, जैसे खगोलीय दूरियों, को मापने के लिए SI मात्रक ________ है।", q_en: "The SI unit for measuring very large distances is ________.", a: "प्रकाश वर्ष", o: ["खगोलीय मात्रक", "प्रकाश वर्ष", "किलोमीटर", "मीटर"], o_en: ["Astronomical unit", "Light year", "Kilometer", "Meter"] },
             { q: "निम्नलिखित में से कौन-सा विकल्प 1 वोल्ट के बराबर है?", q_en: "Which of the following options is equal to 1 Volt?", a: "1 J/1 C", o: ["1 Js", "1 C/s", "1 Cs", "1 J/1 C"], o_en: ["1 Js", "1 C/s", "1 Cs", "1 J/1 C"] },
             { q: "निम्नलिखित में से कौन-सा, अंतर्राष्ट्रीय मात्रक प्रणाली (SI) में ऊर्जा का मानक मात्रक है?", q_en: "Which of the following is the standard unit of energy in SI?", a: "जूल (J)", o: ["न्यूटन (N)", "पास्कल (Pa)", "जूल (J)", "वॉट (W)"], o_en: ["Newton (N)", "Pascal (Pa)", "Joule (J)", "Watt (W)"] },
-            { q: "विद्युत चालकता के लिए व्युत्पन्न मात्रक, सीमेन्स (S), को SI आधार मात्रकों के रूप में किस प्रकार व्यक्त किया जा सकता है?", q_en: "How is the derived unit for electrical conductivity, Siemens (S), expressed in SI base units?", a: "$kg^{-1} \\cdot m^{-2} \\cdot s^3 \\cdot A^2$", o: ["$kg^{-1} \\cdot m^{-2} \\cdot s^3 \\cdot A^2$", "$kg \\cdot m^2 \\cdot s^{-3} \\cdot A^{-2}$", "$kg \\cdot m^2 \\cdot s^{-3} \\cdot A^{-1}$", "$kg^{-1} \\cdot m^2 \\cdot s^3 \\cdot A^2$"], o_en: ["$kg^{-1} \\cdot m^{-2} \\cdot s^3 \\cdot A^2$", "$kg \\cdot m^2 \\cdot s^{-3} \\cdot A^{-2}$", "$kg \\cdot m^2 \\cdot s^{-3} \\cdot A^{-1}$", "$kg^{-1} \\cdot m^2 \\cdot s^3 \\cdot A^2$"] },
-            { q: "कौन-सा SI मूल मात्रक, ऐम्पियर की परिभाषा से सीधे व्युत्पन्न किया जाता है?", q_en: "Which SI base unit is directly derived from the definition of Ampere?", a: "कूलॉम", o: ["कूलॉम", "वॉट", "वोल्ट", "ओम"], o_en: ["Coulomb", "Watt", "Volt", "Ohm"] },
-            { q: "SI प्रणाली में कोणीय संवेग का मात्रक कौन-सा है?", q_en: "What is the unit of angular momentum in the SI system?", a: "$kg \\cdot m^2 \\cdot s^{-1}$", o: ["$kg \\cdot m \\cdot s^{-1}$", "$kg \\cdot m^2 \\cdot s^{-1}$", "$kg \\cdot m^2 \\cdot s^{-2}$", "$kg \\cdot m \\cdot s^{-1}$"], o_en: ["$kg \\cdot m \\cdot s^{-1}$", "$kg \\cdot m^2 \\cdot s^{-1}$", "$kg \\cdot m^2 \\cdot s^{-2}$", "$kg \\cdot m \\cdot s^{-1}$"] },
+            { q: "विद्युत चालकता के लिए व्युत्पन्न मात्रक, सीमेन्स (S), को SI आधार मात्रकों के रूप में किस प्रकार व्यक्त किया जा सकता है?", q_en: "How is Siemens (S) expressed in SI base units?", a: "$kg^{-1} \\cdot m^{-2} \\cdot s^3 \\cdot A^2$", o: ["$kg^{-1} \\cdot m^{-2} \\cdot s^3 \\cdot A^2$", "$kg \\cdot m^2 \\cdot s^{-3} \\cdot A^{-2}$", "$kg \\cdot m^2 \\cdot s^{-3} \\cdot A^{-1}$", "$kg^{-1} \\cdot m^2 \\cdot s^3 \\cdot A^2$"], o_en: ["$kg^{-1} \\cdot m^{-2} \\cdot s^3 \\cdot A^2$", "$kg \\cdot m^2 \\cdot s^{-3} \\cdot A^{-2}$", "$kg \\cdot m^2 \\cdot s^{-3} \\cdot A^{-1}$", "$kg^{-1} \\cdot m^2 \\cdot s^3 \\cdot A^2$"] },
+            { q: "कौन-सा SI मूल मात्रक, ऐम्पियर की परिभाषा से सीधे व्युत्पन्न किया जाता है?", q_en: "Which SI base unit is directly derived from the Ampere definition?", a: "कूलॉम", o: ["कूलॉम", "वॉट", "वोल्ट", "ओम"], o_en: ["Coulomb", "Watt", "Volt", "Ohm"] },
+            { q: "SI प्रणाली में कोणीय संवेग का मात्रक कौन-सा है?", q_en: "What is the unit of angular momentum in SI?", a: "$kg \\cdot m^2 \\cdot s^{-1}$", o: ["$kg \\cdot m \\cdot s^{-1}$", "$kg \\cdot m^2 \\cdot s^{-1}$", "$kg \\cdot m^2 \\cdot s^{-2}$", "$kg \\cdot m \\cdot s^{-1}$"], o_en: ["$kg \\cdot m \\cdot s^{-1}$", "$kg \\cdot m^2 \\cdot s^{-1}$", "$kg \\cdot m^2 \\cdot s^{-2}$", "$kg \\cdot m \\cdot s^{-1}$"] },
             { q: "दाब के मात्रक में 1 बार (bar) के समतुल्य क्या है?", q_en: "What is equivalent to 1 bar in units of pressure?", a: "$10^5$ Pa", o: ["$10^4$ psi", "$10^6$ $N/m^2$", "$10^{-5}$ Pa", "$10^5$ Pa"], o_en: ["$10^4$ psi", "$10^6$ $N/m^2$", "$10^{-5}$ Pa", "$10^5$ Pa"] },
-            { q: "निम्नलिखित में से कौन-सा संयोजन एक S.I. व्युत्पन्न मात्रक निरूपित करता है?", q_en: "Which combination represents an SI derived unit?", a: "वोल्ट, न्यूटन, जूल", o: ["वोल्ट, न्यूटन, जूल", "केल्विन, मोल, एम्पीयर", "मीटर, सेकंड, किलोग्राम", "मीटर, किलोग्राम, एम्पीयर"], o_en: ["Volt, Newton, Joule", "Kelvin, Mole, Ampere", "Meter, Second, Kilogram", "Meter, Kilogram, Ampere"] },
-            { q: "त्वरण की SI इकाई क्या है?", q_en: "What is the SI unit of acceleration?", a: "$ms^{-2}$", o: ["$ms$", "$ms^{-1}$", "$ms^{-2}$", "$Kg \\cdot ms^{-1}$"], o_en: ["$ms$", "$ms^{-1}$", "$ms^{-2}$", "$Kg \\cdot ms^{-1}$"] }
-            // ... (I have truncated for space, but you can keep adding all 95 in this format)
+            { q: "निम्नलिखित में से कौन-सा संयोजन एक S.I. व्युत्पन्न मात्रक निरूपित करता है?", q_en: "Which represents an SI derived unit?", a: "वोल्ट, न्यूटन, जूल", o: ["वोल्ट, न्यूटन, जूल", "केल्विन, मोल, एम्पीयर", "मीटर, सेकंड, किलोग्राम", "मीटर, किलोग्राम, एम्पीयर"], o_en: ["Volt, Newton, Joule", "Kelvin, Mole, Ampere", "Meter, Second, Kilogram", "Meter, Kilogram, Ampere"] },
+            { q: "त्वरण की SI इकाई क्या है?", q_en: "What is the SI unit of acceleration?", a: "$ms^{-2}$", o: ["$ms$", "$ms^{-1}$", "$ms^{-2}$", "$Kg \\cdot ms^{-1}$"], o_en: ["$ms$", "$ms^{-1}$", "$ms^{-2}$", "$Kg \\cdot ms^{-1}$"] },
+            { q: "निम्नलिखित में से कौन सी शक्ति की इकाई नहीं है?", q_en: "Which is NOT a unit of power?", a: "किलोवॉट-घंटा", o: ["जूल/सेकंड", "किलोवॉट-घंटा", "अश्व शक्ति", "वॉट"], o_en: ["Joule/sec", "kWh", "Horsepower", "Watt"] },
+            { q: "निम्नलिखित में से कौन सी ऊष्मीय ऊर्जा की इकाई नहीं है?", q_en: "Which is NOT a unit of thermal energy?", a: "किलोवाट", o: ["किलोवाट", "कैलोरी", "वाट सेकंड", "जूल"], o_en: ["kW", "Calorie", "Watt-sec", "Joule"] },
+            { q: "किस भौतिक राशि का मात्रक वोल्ट/एम्पियर होता है?", q_en: "Which physical quantity has unit Volt/Ampere?", a: "प्रतिरोध", o: ["प्रतिरोध", "धारा", "कार्य", "आवेश"], o_en: ["Resistance", "Current", "Work", "Charge"] },
+            { q: "आवर्धन की इकाई क्या है?", q_en: "What is the unit of magnification?", a: "इसकी कोई इकाई नहीं है", o: ["सेमी.", "डायोप्टर", "इसकी कोई इकाई नहीं है", "न्यूटन"], o_en: ["cm", "Dioptre", "Unitless", "Newton"] },
+            { q: "फोकस दूरी की S. I. इकाई क्या है?", q_en: "What is the SI unit of focal length?", a: "मीटर", o: ["मीटर", "सेंटीमीटर", "मिलीमीटर", "डेसीमीटर"], o_en: ["Meter", "cm", "mm", "dm"] },
+            { q: "विद्युत ऊर्जा का वाणिज्यिक मात्रक ________ है।", q_en: "The commercial unit of electrical energy is ________.", a: "किलोवाट घंटा", o: ["कैलोरी", "जूल", "वॉट", "किलोवाट घंटा"], o_en: ["Calorie", "Joule", "Watt", "kWh"] },
+            { q: "निम्न में से कौन-सा एक SI मात्रक नहीं है?", q_en: "Which is NOT an SI unit?", a: "कैलोरी", o: ["कैलोरी", "एम्पियर", "न्यूटन", "ओम"], o_en: ["Calorie", "Ampere", "Newton", "Ohm"] },
+            { q: "लंबाई की SI इकाई ________ है।", q_en: "The SI unit of length is ________.", a: "मीटर", o: ["मील", "इंच", "फीट", "मीटर"], o_en: ["Mile", "Inch", "Foot", "Meter"] },
+            { q: "त्वरण का मात्रक निम्न में से कौन सा है?", q_en: "Which is the unit of acceleration?", a: "$मी./से.^2$", o: ["$मी./से.^2$", "$वर्ग-मी./से.$", "$मी./से.$", "$फुट/से.$"], o_en: ["$m/s^2$", "$m^2/s$", "$m/s$", "$ft/s$"] },
+            { q: "रेडियोधर्मिता की एसआई (SI) इकाई क्या है?", q_en: "What is the SI unit of radioactivity?", a: "बेकुरल", o: ["बेकुरल", "क्यूरी", "फैराडे", "रदरफोर्ड"], o_en: ["Becquerel", "Curie", "Faraday", "Rutherford"] },
+            { q: "भार की S.I. इकाई क्या है—", q_en: "What is the SI unit of weight?", a: "न्यूटन", o: ["किलोग्राम", "न्यूटन", "ग्राम", "डाइन"], o_en: ["kg", "Newton", "g", "Dyne"] },
+            { q: "निम्न में से किस राशि का SI मात्रक कैंडेला होता है?", q_en: "Which quantity has SI unit Candela?", a: "ज्योति तीव्रता", o: ["आवेग", "वेग", "बल", "ज्योति तीव्रता"], o_en: ["Impulse", "Velocity", "Force", "Luminous intensity"] },
+            { q: "संवेग की SI पद्धति में इकाई क्या है?", q_en: "What is the SI unit of momentum?", a: "$किग्रा.-मी./से.$", o: ["$किग्रा.-मी./से.^2$", "$किग्रा.-मी./से.$", "$ग्राम-मी./से.$", "$किग्रा.-सेमी./से.$"], o_en: ["$kg \\cdot m/s^2$", "$kg \\cdot m/s$", "$g \\cdot m/s$", "$kg \\cdot cm/s$"] },
+            { q: "विद्युत आवेश का एस आई (SI) मात्रक क्या है?", q_en: "What is the SI unit of electric charge?", a: "कूलॉम", o: ["वोल्ट", "कूलॉम", "केल्विन", "किलोग्राम"], o_en: ["Volt", "Coulomb", "Kelvin", "kg"] },
+            { q: "प्रकाश वर्ष ________ की इकाई है।", q_en: "Light year is a unit of ________.", a: "दूरी", o: ["समय", "प्रकाश की तीव्रता", "द्रव्यमान", "दूरी"], o_en: ["Time", "Light intensity", "Mass", "Distance"] },
+            { q: "प्रतिरोध की एस. आई. इकाई है :", q_en: "SI unit of resistance is:", a: "ओम", o: ["कूलम्ब", "ओम", "जूल", "न्यूटन"], o_en: ["Coulomb", "Ohm", "Joule", "Newton"] },
+            { q: "निम्नलिखित में से कौन सी कार्य की इकाई नहीं है?", q_en: "Which is NOT a unit of work?", a: "$किग्रा-मी./सेकण्ड^2$", o: ["$किग्रा-मी./सेकण्ड^2$", "$किग्रा-मी.^2/सेकण्ड^2$", "न्यूटन मीटर", "जूल"], o_en: ["$kg \\cdot m/s^2$", "$kg \\cdot m^2/s^2$", "$N \\cdot m$", "Joule"] },
+            { q: "लेंस की शक्ति की SI इकाई क्या है?", q_en: "SI unit of lens power?", a: "डायोप्टर", o: ["हाइपरमेट्रोपिक", "डायोप्टर", "मायोपिक", "प्रेसबायोपिक"], o_en: ["Hypermetropic", "Dioptre", "Myopic", "Presbyopic"] },
+            { q: "रेडियोधर्मी पदार्थ द्वारा उत्सर्जित होने वाले विकिरण की मात्रा को ________ पारंपरिक इकाई में मापा जाता है।", q_en: "Radiation emitted by radioactive substance is measured in ________.", a: "क्यूरी", o: ["वॉट", "पास्कल", "एम्पियर", "क्यूरी"], o_en: ["Watt", "Pascal", "Ampere", "Curie"] },
+            { q: "उद्योग (Industry) में शक्ति की इकाई है :", q_en: "Unit of power in industry is:", a: "अश्व शक्ति", o: ["किलोवाट", "वॉट", "जूल", "अश्व शक्ति"], o_en: ["kW", "Watt", "Joule", "HP"] },
+            { q: "ध्वनि को मापने के लिए कौन से एकक (यूनिट) को उपयोग किया जाता है?", q_en: "Which unit is used to measure sound?", a: "डेसिबल", o: ["डेसिबल", "हर्ट्ज", "ओम", "वोल्ट"], o_en: ["Decibel", "Hertz", "Ohm", "Volt"] },
+            { q: "ध्वनि की प्रबलता ________ में मापी जा सकती है—", q_en: "Loudness of sound is measured in ________.", a: "डेसिबल", o: ["प्रतिध्वनि", "आवृत्ति", "डेसिबल", "हर्ट्ज़"], o_en: ["Echo", "Frequency", "Decibel", "Hertz"] },
+            { q: "ध्वनि प्रदूषण को ________ के पदों के अनुसार मापा जाता है—", q_en: "Noise pollution is measured in ________.", a: "डेसिबल", o: ["वाट", "पास्कल", "हर्ट्ज", "डेसिबल"], o_en: ["Watt", "Pascal", "Hertz", "Decibel"] },
+            { q: "S.I. प्रणाली में प्रतिबल की माप इकाई है—", q_en: "SI unit of stress is ________.", a: "$N/m^2$", o: ["$kg/cm^2$", "$N$", "$N/m^2$", "$Watt/watt$"], o_en: ["$kg/cm^2$", "$N$", "$N/m^2$", "$Watt/watt$"] },
+            { q: "1. चुंबकीय फ्लक्स घनत्व: टेस्ला; 2. स्व प्रेरण: हेनरी; 3. चुंबकीय फ्लक्स: वेबर - सही मिलान है?", q_en: "Match correctly: 1. Magnetic flux density (Tesla), 2. Self-inductance (Henry), 3. Magnetic flux (Weber).", a: "1-a, 2-c, 3-b", o: ["1-a, 2-b, 3-c", "1-b, 2-c, 3-a", "1-c, 2-a, 3-b", "1-a, 2-c, 3-b"], o_en: ["1-a, 2-b, 3-c", "1-b, 2-c, 3-a", "1-c, 2-a, 3-b", "1-a, 2-c, 3-b"] },
+            { q: "अपवर्तनांक का मात्रक क्या है—", q_en: "Unit of refractive index?", a: "कोई मात्रक नहीं", o: ["$मी^{-1}$", "डायोप्टर", "कोई मात्रक नहीं", "$मी/से.$"], o_en: ["$m^{-1}$", "Dioptre", "Unitless", "$m/s$"] },
+            { q: "निम्न में से किसे 'जूल' ('Joules') में मापा जाता है?", q_en: "Which is measured in Joules?", a: "ऊर्जा", o: ["ऊर्जा", "वेग", "बल", "शक्ति"], o_en: ["Energy", "Velocity", "Force", "Power"] },
+            { q: "निम्नलिखित में से किसकी इकाई, ऊर्जा की इकाई के समान है?", q_en: "Which has unit same as energy?", a: "कार्य", o: ["शक्ति", "घनत्व", "कार्य", "बल"], o_en: ["Power", "Density", "Work", "Force"] },
+            { q: "शक्ति की इकाई को क्या कहा जाता है—", q_en: "What is the unit of power?", a: "वॉट", o: ["वॉट", "जूल", "न्यूटन", "पास्कल"], o_en: ["Watt", "Joule", "Newton", "Pascal"] },
+            { q: "निम्नलिखित में से किसकी कोई इकाई नहीं है?", q_en: "Which has no unit?", a: "सापेक्षिक घनत्व", o: ["घनत्व", "सापेक्षिक घनत्व", "विस्थापन", "दाब"], o_en: ["Density", "Relative density", "Displacement", "Pressure"] },
+            { q: "'गैलन' सामान्यतः ________ इस्तेमाल किया जाता है—", q_en: "Gallon is used for ________.", a: "आयतन की माप", o: ["लंबाई की माप", "द्रव्यमान की माप", "आयतन की माप", "क्षेत्रफल की माप"], o_en: ["Length", "Mass", "Volume", "Area"] },
+            { q: "अनौपचारिक रूप से खगोलीय दूरी को व्यक्त करने के लिए लंबाई की कौन सी इकाई का प्रयोग किया जाता है?", q_en: "Informal unit for astronomical distance?", a: "प्रकाश वर्ष", o: ["पेटामीटर", "पारसेक", "प्रकाश वर्ष", "हब्बल की लम्बाई"], o_en: ["Petameter", "Parsec", "Light year", "Hubble length"] },
+            { q: "दबाव की एस. आई. (SI) इकाई क्या है?", q_en: "SI unit of pressure?", a: "न्यूटन प्रति वर्ग मीटर", o: ["न्यूटन प्रति वर्ग सेंटीमीटर", "न्यूटन- वर्ग मीटर", "न्यूटन प्रति वर्ग मीटर", "न्यूटन- वर्ग सेंटी मीटर"], o_en: ["$N/cm^2$", "$N \\cdot m^2$", "$N/m^2$", "$N \\cdot cm$"] },
+            { q: "________ पृथ्वी से लेकर सूर्य तक की अनुमानित दूरी की लंबाई की यूनिट है।", q_en: "Estimated distance between Earth and Sun?", a: "एस्ट्रोनॉमिकल यूनिट", o: ["लाइट इयर्स", "एस्ट्रोनॉमिकल यूनिट", "केल्विन", "जूल"], o_en: ["Light year", "AU", "Kelvin", "Joule"] },
+            { q: "बल की इकाई ________ है।", q_en: "Unit of force is ________.", a: "$Kgms^{-2}$", o: ["$gms^{-1}$", "$Kgms^{-2}$", "$gms^{-2}$", "$Kgms^{-1}$"], o_en: ["$g \\cdot m/s$", "$kg \\cdot m/s^2$", "$g \\cdot m/s^2$", "$kg \\cdot m/s$"] },
+            { q: "बल (फोर्स) की SI यूनिट क्या है?", q_en: "SI unit of Force?", a: "न्यूटन", o: ["केल्विन", "न्यूटन", "पास्कल", "वोल्ट"], o_en: ["Kelvin", "Newton", "Pascal", "Volt"] },
+            { q: "निम्नलिखित में से कौन सी मात्रा और उसकी SI इकाई सही रूप से सुमेलित नहीं है?", q_en: "Incorrectly matched SI pair?", a: "मैग्नेटिक-फ्लक्स-टेस्ला", o: ["फ्रीक्वेंसी-हर्ट्ज", "मैग्नेटिक-फ्लक्स-टेस्ला", "प्रेशर-पास्कल", "इलेक्ट्रिक कंडक्टन्स-सीमेंस"], o_en: ["Freq-Hz", "MagFlux-Tesla", "Press-Pa", "ElecCond-Siemens"] },
+            { q: "विस्थापन की SI इकाई ________ है।", q_en: "SI unit of displacement?", a: "मीटर", o: ["मीटर", "किलोमीटर", "सेंटिमीटर", "मीटर प्रति सेकंड"], o_en: ["Meter", "km", "cm", "m/s"] },
+            { q: "विभवांतर की एसआई (SI) इकाई ________ है।", q_en: "SI unit of potential difference?", a: "वोल्ट", o: ["कूलॉम", "जूल", "वोल्ट", "वाट"], o_en: ["Coulomb", "Joule", "Volt", "Watt"] },
+            { q: "'चुंबकीय फ्लक्स' की एसआई (SI) इकाई क्या है?", q_en: "SI unit of Magnetic flux?", a: "वेबर", o: ["फैरड", "हेनरी", "पास्कल", "वेबर"], o_en: ["Farad", "Henry", "Pascal", "Weber"] },
+            { q: "'g' के मान की एस आई इकाई वही है जो ________ की एस आई इकाई है।", q_en: "SI unit of 'g' is same as ________.", a: "त्वरण", o: ["दाब", "संवेग", "वेग", "त्वरण"], o_en: ["Pressure", "Momentum", "Velocity", "Acceleration"] },
+            { q: "$Nm^2Kg^{-2}$ की SI इकाई________ है।", q_en: "$Nm^2Kg^{-2}$ is SI unit of ________.", a: "गुरुत्वाकर्षण के सार्वभौमिक नियतांक", o: ["दबाव", "संवेग", "त्वरण", "गुरुत्वाकर्षण के सार्वभौमिक नियतांक"], o_en: ["Pressure", "Momentum", "Acc", "Universal Gravitational Const"] },
+            { q: "भार की SI इकाई ________ की SI इकाई के बराबर होती है।", q_en: "SI unit of weight is same as ________.", a: "बल", o: ["आवेग", "त्वरण", "बल", "द्रव्यमान"], o_en: ["Impulse", "Acc", "Force", "Mass"] },
+            { q: "चाल की अंतर्राष्ट्रीय (SI) इकाई है।", q_en: "International SI unit of speed?", a: "मी./से.", o: ["मी./से.", "किमी./घं.", "मी./मिनट", "किमी./से."], o_en: ["m/s", "km/h", "m/min", "km/s"] },
+            { q: "किन दो भौतिक राशियों की इकाई एक ही है?", q_en: "Which two have same unit?", a: "बल और भार", o: ["दाब और बल", "बल और विस्थापन", "बल और गति", "बल और भार"], o_en: ["Press & Force", "Force & Disp", "Force & Motion", "Force & Weight"] },
+            { q: "$ms^{-2}$ किसकी SI इकाई है?", q_en: "$ms^{-2}$ is SI unit of ________.", a: "त्वरण", o: ["वेग", "गति", "बल", "त्वरण"], o_en: ["Velocity", "Motion", "Force", "Acceleration"] },
+            { q: "________ की SI इकाई जूल/सेकंड है?", q_en: "Whose SI unit is J/s?", a: "शक्ति", o: ["कार्य", "बल", "प्रणोद", "शक्ति"], o_en: ["Work", "Force", "Thrust", "Power"] },
+            { q: "न्यूटन, ________ के मापन की इकाई है।", q_en: "Newton is unit of ________.", a: "बल", o: ["शक्ति", "बल", "दाब", "प्रतिरोध"], o_en: ["Power", "Force", "Pressure", "Resistance"] },
+            { q: "________ की SI इकाई न्यूटन है।", q_en: "Whose SI unit is Newton?", a: "वजन और बल", o: ["वजन और त्वरण", "वजन और बल", "वजन और द्रव्यमान", "वजन और संवेग"], o_en: ["Weight & Acc", "Weight & Force", "Weight & Mass", "Weight & Momentum"] },
+            { q: "विद्युत धारा की SI इकाई क्या है?", q_en: "SI unit of electric current?", a: "एम्पियर", o: ["वोल्ट", "कूलॉम", "एम्पियर", "ओम"], o_en: ["Volt", "Coulomb", "Ampere", "Ohm"] },
+            { q: "कूलॉम किसकी SI इकाई है—", q_en: "Coulomb is unit of ________.", a: "विद्युत आवेश", o: ["प्रतिरोध", "विद्युत प्रवाह", "विभवांतर", "विद्युत आवेश"], o_en: ["Resistance", "Current", "Potential diff", "Electric Charge"] },
+            { q: "विद्युत धारा की इकाई एम्पीयर है?", q_en: "Current unit is Ampere?", a: "विद्युत धारा", o: ["विभवान्तर", "विद्युत आवेश", "विद्युत धारा", "प्रतिरोध"], o_en: ["Potential", "Charge", "Current", "Resist"] },
+            { q: "एस.आई.इकाई वोल्ट है?", q_en: "SI unit is Volt?", a: "विभवान्तर", o: ["प्रतिरोध", "विद्युत आवेश", "विद्युत धारा", "विभवान्तर"], o_en: ["Resist", "Charge", "Current", "Potential"] },
+            { q: "$Nm^{-2}$ ________ की अंतर्राष्ट्रीय (SI) इकाई है।", q_en: "$Nm^{-2}$ is SI unit of ________.", a: "दाब", o: ["बल", "प्रणोद", "संवेग", "दाब"], o_en: ["Force", "Thrust", "Momentum", "Pressure"] },
+            { q: "दी गई भौतिक राशियों में से क्या सापेक्ष राशि नहीं है?", q_en: "Which is not a relative quantity?", a: "समय", o: ["समय", "त्वरण", "वेग", "दूरी"], o_en: ["Time", "Acc", "Vel", "Dist"] },
+            { q: "किस युग्म की इकाइयां समान नहीं होतीं?", q_en: "Which pair has different units?", a: "बल और दाब", o: ["चाल और वेग", "कार्य और ऊर्जा", "दूरी और विस्थापन", "बल और दाब"], o_en: ["Speed/Vel", "Work/Energy", "Dist/Disp", "Force/Press"] },
+            { q: "ओम-मीटर ________ की इकाई है।", q_en: "Ohm-meter is unit of ________.", a: "प्रतिरोधकता", o: ["प्रतिरोधकता", "विद्युत प्रवाह", "आवेश", "प्रतिरोध"], o_en: ["Resistivity", "Current", "Charge", "Resistance"] },
+            { q: "मंदता की अंतर्राष्ट्रीय (SI) इकाई ________ है।", q_en: "SI unit of retardation?", a: "$ms^{-2}$", o: ["$ms^2$", "$ms$", "$ms^{-1}$", "$ms^{-2}$"], o_en: ["$ms^2$", "$ms$", "$ms^{-1}$", "$ms^{-2}$"] },
+            { q: "किन युग्म की SI इकाइयां समान हैं?", q_en: "Which pair has same SI units?", a: "कार्य और ऊर्जा", o: ["बल और दूरी", "संवेग और बल", "बल और दाब", "कार्य और ऊर्जा"], o_en: ["Force/Dist", "Mom/Force", "Force/Press", "Work/Energy"] },
+            { q: "तरंग दैर्ध्य का SI मात्रक क्या है?", q_en: "SI unit of wavelength?", a: "मीटर", o: ["हर्ट्ज़", "किलोग्राम", "सेकण्ड", "मीटर"], o_en: ["Hz", "kg", "sec", "meter"] },
+            { q: "किसी पदार्थ की मात्रा को मापने के लिए निम्नलिखित में से किस इकाई का उपयोग किया जाता है?", q_en: "Unit for amount of substance?", a: "मोल", o: ["लक्स", "मोल", "टेस्ला", "जूल"], o_en: ["Lux", "Mole", "Tesla", "Joule"] },
+            { q: "इनमें से कौन-सा SI इकाई में मोल का प्रतीक है?", q_en: "Symbol for mole in SI?", a: "mol", o: ["g", "mol", "kg", "mg"], o_en: ["g", "mol", "kg", "mg"] },
+            { q: "विद्युत ऊर्जा व्यय का वाणिज्यिक मात्रक क्या है?", q_en: "Commercial unit of energy expenditure?", a: "किलोवॉट घंटा (kWh)", o: ["किलोवॉट घंटा (kWh)", "जूल (J)", "वॉट (W)", "वोल्ट (V)"], o_en: ["kWh", "J", "W", "V"] },
+            { q: "मात्रक कूलॉम/सेकंड का दूसरा नाम क्या है?", q_en: "Another name for Coulomb/second?", a: "एम्पियर (A)", o: ["जूल (J)", "एम्पियर (A)", "वोल्ट (V)", "सेकंड (S)"], o_en: ["J", "A", "V", "S"] },
+            { q: "तरंग वेग का SI मात्रक क्या है?", q_en: "SI unit of wave velocity?", a: "मीटर प्रति सेकंड", o: ["मीटर", "मीटर प्रति सेकंड", "सेकंड", "हर्ट्ज"], o_en: ["meter", "m/s", "sec", "Hz"] }
         ];
 
         let currentLang = 'hi';
@@ -173,10 +234,8 @@
             document.getElementById('lang-hi').className = lang === 'hi' ? 'px-3 py-1 rounded-lg text-xs font-bold transition-all bg-white shadow-sm text-blue-600' : 'px-3 py-1 rounded-lg text-xs font-bold transition-all text-slate-500';
             document.getElementById('lang-en').className = lang === 'en' ? 'px-3 py-1 rounded-lg text-xs font-bold transition-all bg-white shadow-sm text-blue-600' : 'px-3 py-1 rounded-lg text-xs font-bold transition-all text-slate-500';
             
-            // Update UI Labels
             document.getElementById('lbl-q').textContent = uiStrings[lang].q;
             document.getElementById('lbl-prev').textContent = uiStrings[lang].prev;
-            document.getElementById('next-text').textContent = currentIndex === questions.length - 1 ? uiStrings[lang].finish : uiStrings[lang].next;
             document.getElementById('lbl-palette').textContent = uiStrings[lang].palette;
             document.getElementById('lbl-finish').textContent = uiStrings[lang].finishQuiz;
             document.getElementById('lbl-view-res').textContent = uiStrings[lang].viewRes;
@@ -215,12 +274,9 @@
             
             const opts = currentLang === 'hi' ? q.o : q.o_en;
             opts.forEach((opt, i) => {
-                // To track the answer correctly across languages, we store the choice index or the original Hindi text
-                // Here we'll map the selection to the original option list index
                 const isSelected = userAnswers[currentIndex] === q.o[i]; 
-                
                 const btn = document.createElement('button');
-                btn.onclick = () => selectOption(q.o[i]); // Always store the base (Hindi) value for comparison
+                btn.onclick = () => selectOption(q.o[i]);
                 btn.className = `text-left p-4 rounded-xl border-2 transition ${isSelected ? 'border-blue-500 bg-blue-50 text-blue-700 font-bold' : 'border-slate-100 hover:border-blue-200'}`;
                 btn.innerHTML = `<span class="inline-block w-8 h-8 text-center leading-8 rounded-full bg-slate-100 mr-3 text-sm font-bold">${String.fromCharCode(65+i)}</span> ${opt}`;
                 optCont.appendChild(btn);
@@ -302,17 +358,14 @@
                 const isCorrect = userAns === q.a;
                 if (isCorrect) score++;
 
-                // For review, show both or current lang
                 const card = document.createElement('div');
                 card.className = `review-card p-6 rounded-2xl bg-white border ${isCorrect ? 'correct' : (userAns ? 'incorrect' : '')}`;
-                
                 const questionShow = currentLang === 'hi' ? q.q : q.q_en;
-                const correctShow = q.a; // Usually math/terms remain same
                 
                 card.innerHTML = `
                     <p class="font-bold text-slate-800 mb-2">${i+1}. ${questionShow}</p>
                     <div class="flex flex-wrap gap-4 text-sm">
-                        <span class="text-slate-500">${currentLang === 'hi' ? 'सही' : 'Correct'}: <b class="text-green-600">${correctShow}</b></span>
+                        <span class="text-slate-500">${currentLang === 'hi' ? 'सही' : 'Correct'}: <b class="text-green-600">${q.a}</b></span>
                         ${userAns ? `<span class="text-slate-500">${currentLang === 'hi' ? 'आपका' : 'Yours'}: <b class="${isCorrect?'text-green-600':'text-red-600'}">${userAns}</b></span>` : `<span class="text-amber-600 font-bold">${currentLang === 'hi' ? 'छोड़ा गया' : 'Skipped'}</span>`}
                     </div>
                 `;
