@@ -14,7 +14,20 @@
   <!-- Google Font -->
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-    body { font-family: 'Inter', sans-serif; }
+    body { font-family: 'Inter', sans-serif; transition: all 0.3s ease; }
+        .sticky-panel { position: sticky; top: 1rem; }
+        
+        /* Palette Styles */
+        .pal-btn { transition: all 0.2s; border-width: 2px; }
+        .pal-btn.active { background-color: #059669 !important; color: white !important; border-color: #047857 !important; transform: scale(1.05); }
+        .pal-btn.answered { background-color: #10b981; color: white; border-color: #059669; }
+        .pal-btn.unvisited { background-color: white; color: #94a3b8; border-color: #e2e8f0; }
+        
+        @media print { .no-print { display: none; } }
+        .review-card { border-left: 4px solid #e2e8f0; }
+        .review-card.correct { border-left-color: #10b981; background-color: #f0fdf4; }
+        .review-card.incorrect { border-left-color: #ef4444; background-color: #fef2f2; }
+        .review-card.unanswered { border-left-color: #f59e0b; background-color: #fffbeb; }
   </style>
 
   <!-- ✅ MathJax CONFIG (MUST be BEFORE script) -->
