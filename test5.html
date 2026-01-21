@@ -1,29 +1,36 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Physics Quiz - 95 Units & Measurement</title>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Physics Quiz - 95 Units & Measurement</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; transition: all 0.3s ease; }
-        .sticky-panel { position: sticky; top: 1rem; }
-        .pal-btn { transition: all 0.2s; border-width: 2px; }
-        .pal-btn.active { background-color: #2563eb !important; color: white !important; border-color: #1d4ed8 !important; transform: scale(1.05); }
-        .pal-btn.answered { background-color: #3b82f6; color: white; border-color: #2563eb; }
-        .pal-btn.unvisited { background-color: white; color: #94a3b8; border-color: #e2e8f0; }
-        @media print { .no-print { display: none; } }
-        .review-card { border-left: 4px solid #e2e8f0; }
-        .review-card.correct { border-left-color: #10b981; background-color: #f0fdf4; }
-        .review-card.incorrect { border-left-color: #ef4444; background-color: #fef2f2; }
-    </style>
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Google Font -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+  </style>
+
+  <!-- ✅ MathJax CONFIG (MUST be BEFORE script) -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$']]
+      }
+    };
+  </script>
+
+  <!-- ✅ MathJax SCRIPT (ONLY ONCE) -->
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
+
 <body class="bg-slate-50 min-h-screen">
 
     <header class="bg-white border-b border-slate-200 sticky top-0 z-50 no-print">
