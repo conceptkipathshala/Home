@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Environment Quiz 2025 - Concept ki Pathshala</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; transition: all 0.3s ease; }
+        .sticky-panel { position: sticky; top: 1rem; }
+        
+        /* Palette Styles */
+        .pal-btn { transition: all 0.2s; border-width: 2px; }
+        .pal-btn.active { background-color: #059669 !important; color: white !important; border-color: #047857 !important; transform: scale(1.05); }
+        .pal-btn.answered { background-color: #10b981; color: white; border-color: #059669; }
+        .pal-btn.unvisited { background-color: white; color: #94a3b8; border-color: #e2e8f0; }
+        
+        @media print { .no-print { display: none; } }
+        .review-card { border-left: 4px solid #e2e8f0; }
+        .review-card.correct { border-left-color: #10b981; background-color: #f0fdf4; }
+        .review-card.incorrect { border-left-color: #ef4444; background-color: #fef2f2; }
+        .review-card.unanswered { border-left-color: #f59e0b; background-color: #fffbeb; }
+    </style>
+</head>
+<body class="bg-emerald-50/30 min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-emerald-100 sticky top-0 z-50 no-print">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="bg-emerald-600 p-1.5 rounded-lg text-white">
+                    <i class="fas fa-leaf"></i>
+                </div>
+                <span class="font-bold text-slate-800 text-lg hidden md:block">Concept ki Pathshala</span>
+            </div>
+            
+            <div class="flex items-center space-x-2 md:space-x-6">
+                <button onclick="toggleLanguage()" class="flex items-center bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-lg border border-emerald-200 transition text-sm font-bold text-emerald-700">
+                    <i class="fas fa-language mr-2"></i>
+                    <span id="lang-text">English</span>
+                </button>
+                <div class="text-slate-600 font-medium text-sm md:text-base">
+                    <i class="far fa-clock mr-1"></i><span id="timer-label">समय:</span> <span id="timer" class="text-emerald-600 font-bold">07:00</span>
+                </div>
+                <button onclick="confirmSubmit()" class="bg-red-600 text-white px-3 md:px-4 py-1.5 rounded-lg font-bold hover:bg-red-700 transition text-sm">
+                    Submit
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main id="quiz-view" class="max-w-7xl mx-auto px-4 py-8 no-print">
+        <div class="grid lg:grid-cols-4 gap-8">
+            <div class="lg:col-span-3 space-y-6">
+                <div id="quiz-container" class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-emerald-100">
+                    <div class="flex justify-between items-center mb-6">
+                        <span class="text-emerald-600 font-bold uppercase tracking-wider text-sm">
+                            <span id="q-label">Question</span> <span id="current-q-num">1</span> / 10
+                        </span>
+                        <span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold">Environment & Ecology</span>
+                    </div>
+                    <h2 id="question-text" class="text-xl md:text-2xl font-bold text-slate-800 mb-8 leading-snug min-h-[4rem]"></h2>
+                    <div id="options-container" class="space-y-4"></div>
+                    <div class="flex justify-between items-center mt-10 pt-6 border-t border-emerald-50">
+                        <button onclick="prevQuestion()" id="prev-btn" class="flex items-center text-slate-500 font-bold hover:text-emerald-600 disabled:opacity-30">
+                            <i class="fas fa-chevron-left mr-2"></i> <span id="prev-text">Previous</span>
+                        </button>
+                        <button onclick="nextQuestion()" id="next-btn" class="bg-emerald-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-emerald-700 shadow-lg shadow-emerald-200 transition">
+                            <span id="next-text">Save & Next</span> <i class="fas fa-chevron-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="lg:col-span-1">
+                <div class="sticky-panel space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-emerald-100">
+                        <h3 class="font-bold text-slate-800 mb-4 flex items-center">
+                            <i class="fas fa-th mr-2 text-emerald-500"></i> <span id="palette-label">Question Palette</span>
+                        </h3>
+                        <div id="palette-container" class="grid grid-cols-5 gap-2"></div>
+                        <div class="mt-6 pt-4 border-t border-emerald-50 space-y-2">
+                            <div class="flex items-center text-xs text-slate-500">
+                                <span class="w-3 h-3 bg-emerald-600 rounded-sm mr-2"></span> Current
+                            </div>
+                            <div class="flex items-center text-xs text-slate-500">
+                                <span class="w-3 h-3 bg-green-500 rounded-sm mr-2"></span> Answered
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal -->
+    <div id="info-modal" class="fixed inset-0 bg-slate-900/80 z-[100] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl">
+            <h2 class="text-2xl font-bold text-slate-800 mb-2" id="modal-title">अंतिम चरण</h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1" id="label-name">पूरा नाम</label>
+                    <input type="text" id="user-name" class="w-full px-4 py-3 rounded-xl border border-emerald-100 outline-none focus:border-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-1" id="label-exam">लक्षित परीक्षा</label>
+                    <select id="user-exam" class="w-full px-4 py-3 rounded-xl border border-emerald-100">
+                        <option>UPSC / State PSC</option>
+                        <option>SSC / Railway</option>
+                        <option>Environmental Exams</option>
+                        <option>Other Govt Exams</option>
+                    </select>
+                </div>
+                <button onclick="generateResult()" class="w-full bg-emerald-600 text-white py-4 rounded-xl font-bold hover:bg-emerald-700 transition" id="btn-gen">
+                    Score Card
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Result View -->
+    <div id="result-view" class="fixed inset-0 bg-emerald-50/30 z-[110] hidden overflow-y-auto">
+        <div class="max-w-4xl mx-auto px-4 py-12">
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-emerald-100 mb-8">
+                <div class="bg-emerald-600 p-8 text-center text-white">
+                    <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-seedling text-3xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold mb-1">Environmental Quiz Score Card</h2>
+                    <p class="text-emerald-100">Current Affairs 2025</p>
+                </div>
+                
+                <div class="p-6 md:p-10">
+                    <div class="grid grid-cols-2 gap-4 mb-8">
+                        <div class="bg-emerald-50 p-4 rounded-2xl text-center border border-emerald-100">
+                            <p class="text-emerald-500 text-xs font-bold uppercase mb-1">Total Score</p>
+                            <p class="text-3xl font-black text-slate-800"><span id="res-score">0</span> / 10</p>
+                        </div>
+                        <div class="bg-emerald-50 p-4 rounded-2xl text-center border border-emerald-100">
+                            <p class="text-emerald-500 text-xs font-bold uppercase mb-1">Accuracy</p>
+                            <p class="text-3xl font-black text-slate-800" id="res-acc">0%</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4 mb-8">
+                        <div class="flex justify-between py-3 border-b border-emerald-50">
+                            <span class="text-slate-500" id="res-label-name">Name</span>
+                            <span class="font-bold text-slate-800" id="res-name">-</span>
+                        </div>
+                        <div class="flex justify-between py-3 border-b border-emerald-50">
+                            <span class="text-slate-500" id="res-label-exam">Exam</span>
+                            <span class="font-bold text-slate-800" id="res-exam-cat">-</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 no-print">
+                        <button onclick="window.print()" class="flex items-center justify-center bg-slate-800 text-white py-4 rounded-xl font-bold hover:bg-slate-900 transition">
+                            <i class="fas fa-print mr-2"></i> Print Result
+                        </button>
+                        <button onclick="shareToWhatsapp()" class="flex items-center justify-center bg-green-600 text-white py-4 rounded-xl font-bold hover:bg-green-700 transition">
+                            <i class="fab fa-whatsapp mr-2"></i> WhatsApp
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <h3 class="text-2xl font-bold text-slate-800 px-4" id="review-title">Detailed Analysis</h3>
+                <div id="review-container" class="space-y-4"></div>
+            </div>
+            
+            <div class="text-center mt-12 no-print">
+                <button onclick="location.reload()" class="bg-white border border-emerald-200 text-emerald-600 px-8 py-3 rounded-xl font-bold hover:bg-emerald-50 transition">
+                    Restart Test
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questionsData = [
+            { qh: "भारत का प्रथम पूर्णतः सौर ऊर्जा संचालित चिड़ियाघर कौन बनेगा?", qe: "Which will become India's first fully solar-powered zoo?", ah: "बन्नेरघट्टा बायोलॉजिकल पार्क, बेंगलुरु", ae: "Bannerghatta Biological Park, Bengaluru", oh: ["संजय गांधी जैविक उद्यान, पटना", "बन्नेरघट्टा बायोलॉजिकल पार्क, बेंगलुरु", "मैसूर चिड़ियाघर", "अलीपुर चिड़ियाघर, कोलकाता"], oe: ["Sanjay Gandhi Biological Park, Patna", "Bannerghatta Biological Park, Bengaluru", "Mysuru Zoo", "Alipore Zoo, Kolkata"] },
+            { qh: "देश का पहला राज्य कौन है जिसने केंद्रीय वन्यजीव संरक्षण अधिनियम 1972 में संशोधन करने वाला विधेयक पारित किया?", qe: "Which is the first state in the country to pass a bill amending the Central Wildlife Protection Act 1972?", ah: "केरल", ae: "Kerala", oh: ["तमिलनाडु", "उत्तराखंड", "केरल", "असम"], oe: ["Tamil Nadu", "Uttarakhand", "Kerala", "Assam"] },
+            { qh: "दुनिया के किस देश ने पहला लाइव अंडरवाटर (पानी के नीचे) इंटरव्यू आयोजित किया?", qe: "Which country in the world conducted the first live underwater interview?", ah: "पलाऊ", ae: "Palau", oh: ["मालदीव", "ऑस्ट्रेलिया", "फिजी", "पलाऊ"], oe: ["Maldives", "Australia", "Fiji", "Palau"] },
+            { qh: "भारत की पहली बांस आधारित बायोरिफाइनरी 'द वल्चर नेटवर्क' किस विश्वविद्यालय की मदद से लॉन्च किया गया?", qe: "India's first bamboo-based biorefinery 'The Vulture Network' was launched with the help of which university?", ah: "गुवाहाटी विश्वविद्यालय", ae: "Guwahati University", oh: ["दिल्ली विश्वविद्यालय", "बनारस हिंदू विश्वविद्यालय", "गुवाहाटी विश्वविद्यालय", "तेजपुर विश्वविद्यालय"], oe: ["Delhi University", "BHU", "Guwahati University", "Tezpur University"] },
+            { qh: "वैश्विक वन्यजीव मेला 2025 (Global Wildlife Fair 2025) का आयोजन कहाँ किया गया?", qe: "Where was the Global Wildlife Fair 2025 organized?", ah: "दिल्ली", ae: "Delhi", oh: ["भोपाल", "दिल्ली", "जयपुर", "गांधीनगर"], oe: ["Bhopal", "Delhi", "Jaipur", "Gandhinagar"] },
+            { qh: "दक्षिण पूर्व एशिया का पहला कोरल लार्वा क्रायोबैंक (Coral Larva Cryobank) किस देश ने लॉन्च किया है?", qe: "Which country launched Southeast Asia's first Coral Larva Cryobank?", ah: "फिलीपींस", ae: "Philippines", oh: ["इंडोनेशिया", "वियतनाम", "फिलीपींस", "थाईलैंड"], oe: ["Indonesia", "Vietnam", "Philippines", "Thailand"] },
+            { qh: "पर्यावरण संरक्षण के लिए 31वां डॉ. एम.एस. स्वामीनाथन पुरस्कार किस संगठन को मिला?", qe: "Which organization received the 31st Dr. M.S. Swaminathan Award for Environmental Protection?", ah: "सहज समृद्ध", ae: "Sahaja Samrudha", oh: ["ग्रीनपीस इंडिया", "सहज समृद्ध", "ईशा फाउंडेशन", "CSE"], oe: ["Greenpeace India", "Sahaja Samrudha", "Isha Foundation", "CSE"] },
+            { qh: "किस भारतीय को जलवायु नेताओं में, टाइम मैगजीन के 100 सबसे प्रभावशाली व्यक्तियों में शामिल किया गया?", qe: "Which Indian was included in Time Magazine's 100 most influential people among climate leaders?", ah: "सोनम वांगचुक", ae: "Sonam Wangchuk", oh: ["मेधा पाटकर", "सुनीता नारायण", "सोनम वांगचुक", "जादव पायेंग"], oe: ["Medha Patkar", "Sunita Narain", "Sonam Wangchuk", "Jadav Payeng"] },
+            { qh: "भारत की 94वीं रामसर साइट (Ramsar Site) 'गोगाबिल झील' किस राज्य में स्थित है?", qe: "In which state is India's 94th Ramsar Site 'Gogabil Lake' located?", ah: "बिहार", ae: "Bihar", oh: ["उत्तर प्रदेश", "बिहार", "पश्चिम बंगाल", "ओडिशा"], oe: ["Uttar Pradesh", "Bihar", "West Bengal", "Odisha"] },
+            { qh: "किस राज्य के 5 तटों (Beaches) को हाल ही में ब्लू फ्लैग (Blue Flag) प्रमाणन मिला है?", qe: "Which state's 5 beaches recently received Blue Flag certification?", ah: "महाराष्ट्र", ae: "Maharashtra", oh: ["ओडिशा", "गुजरात", "महाराष्ट्र", "गोवा"], oe: ["Odisha", "Gujarat", "Maharashtra", "Goa"] }
+        ];
+
+        let currentLang = 'hi';
+        let shuffledQuestions = [];
+        let currentIndex = 0;
+        let userAnswers = new Array(10).fill(null);
+        let timeLeft = 7 * 60; 
+        let timerInterval;
+
+        const uiLabels = {
+            hi: { timer: "समय:", qLabel: "प्रश्न", prev: "पिछला", next: "अगला", mTitle: "अंतिम चरण", lName: "पूरा नाम", lExam: "परीक्षा", btnGen: "सबमिट करें", resName: "नाम", resExam: "परीक्षा श्रेणी", revTitle: "विस्तृत विश्लेषण", revCorrect: "सही उत्तर", revYour: "आपका उत्तर" },
+            en: { timer: "Time:", qLabel: "Question", prev: "Previous", next: "Next", mTitle: "Final Step", lName: "Full Name", lExam: "Exam", btnGen: "Submit Results", resName: "Student", resExam: "Category", revTitle: "Detailed Analysis", revCorrect: "Correct Ans", revYour: "Your Ans" }
+        };
+
+        function toggleLanguage() {
+            currentLang = (currentLang === 'hi' ? 'en' : 'hi');
+            document.getElementById('lang-text').textContent = (currentLang === 'hi' ? 'English' : 'हिंदी');
+            updateUI();
+        }
+
+        function updateUI() {
+            const labels = uiLabels[currentLang];
+            document.getElementById('timer-label').textContent = labels.timer;
+            document.getElementById('q-label').textContent = labels.qLabel;
+            document.getElementById('prev-text').textContent = labels.prev;
+            document.getElementById('next-text').textContent = labels.next;
+            document.getElementById('modal-title').textContent = labels.mTitle;
+            document.getElementById('label-name').textContent = labels.lName;
+            document.getElementById('label-exam').textContent = labels.lExam;
+            document.getElementById('btn-gen').textContent = labels.btnGen;
+            document.getElementById('review-title').textContent = labels.revTitle;
+            displayQuestion();
+        }
+
+        function init() {
+            shuffledQuestions = questionsData.map(q => {
+                const idxs = [0,1,2,3].sort(()=>Math.random()-0.5);
+                return { ...q, oh: idxs.map(i=>q.oh[i]), oe: idxs.map(i=>q.oe[i]) };
+            });
+            renderPalette();
+            updateUI();
+            startTimer();
+        }
+
+        function renderPalette() {
+            const cont = document.getElementById('palette-container');
+            cont.innerHTML = '';
+            for(let i=0; i<10; i++) {
+                const b = document.createElement('button');
+                b.textContent = i+1;
+                b.id = `pal-${i}`;
+                b.className = "pal-btn w-10 h-10 rounded-lg text-sm font-bold unvisited";
+                b.onclick = () => { currentIndex = i; displayQuestion(); };
+                cont.appendChild(b);
+            }
+        }
+
+        function displayQuestion() {
+            const q = shuffledQuestions[currentIndex];
+            document.getElementById('current-q-num').textContent = currentIndex+1;
+            document.getElementById('question-text').textContent = currentLang==='hi' ? q.qh : q.qe;
+            const optCont = document.getElementById('options-container');
+            optCont.innerHTML = '';
+            
+            const opts = currentLang==='hi' ? q.oh : q.oe;
+            opts.forEach((o, i) => {
+                const isSel = userAnswers[currentIndex] === q.oh[i];
+                optCont.innerHTML += `
+                    <label class="flex items-center p-4 rounded-xl border-2 cursor-pointer transition ${isSel?'bg-emerald-50 border-emerald-500':'border-slate-200 hover:border-emerald-300'}">
+                        <input type="radio" class="hidden" name="opt" onchange="handleAnswerSelection('${q.oh[i].replace(/'/g,"\\'")}')">
+                        <span class="w-8 h-8 rounded-full border flex items-center justify-center mr-4 text-xs font-bold ${isSel?'bg-emerald-600 text-white':'bg-white'}">${String.fromCharCode(65+i)}</span>
+                        ${o}
+                    </label>
+                `;
+            });
+            
+            document.getElementById('prev-btn').disabled = currentIndex === 0;
+            updatePaletteUI();
+        }
+
+        function handleAnswerSelection(answer) {
+            userAnswers[currentIndex] = answer;
+            updatePaletteUI();
+            displayQuestion(); 
+        }
+
+        function updatePaletteUI() {
+            for(let i=0; i<10; i++) {
+                const b = document.getElementById(`pal-${i}`);
+                if(!b) continue;
+                b.className = "pal-btn w-10 h-10 rounded-lg text-sm font-bold ";
+                if(i === currentIndex) {
+                    b.classList.add('active');
+                } else if(userAnswers[i] !== null) {
+                    b.classList.add('answered');
+                } else {
+                    b.classList.add('unvisited');
+                }
+            }
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                const m = Math.floor(timeLeft/60), s = timeLeft%60;
+                document.getElementById('timer').textContent = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+                if(timeLeft-- <= 0) { clearInterval(timerInterval); showInfoModal(); }
+            }, 1000);
+        }
+
+        function confirmSubmit() { if(confirm("Submit Test?")) { clearInterval(timerInterval); showInfoModal(); } }
+        function showInfoModal() { document.getElementById('info-modal').classList.remove('hidden'); }
+
+        function generateResult() {
+            const name = document.getElementById('user-name').value;
+            if(!name) return alert("Please enter your name");
+            
+            let score = 0;
+            const rev = document.getElementById('review-container');
+            rev.innerHTML = '';
+            
+            shuffledQuestions.forEach((q, i) => {
+                const u = userAnswers[i], cor = q.ah, isCor = u === cor;
+                if(isCor) score++;
+                
+                const card = document.createElement('div');
+                card.className = `review-card p-5 rounded-2xl border ${u===null?'unanswered':(isCor?'correct':'incorrect')}`;
+                
+                const uIdx = q.oh.indexOf(u);
+                const cIdx = q.oh.indexOf(cor);
+                const uDisplay = u===null ? "N/A" : (currentLang==='hi'?q.oh[uIdx]:q.oe[uIdx]);
+                const cDisplay = (currentLang==='hi'?q.oh[cIdx]:q.oe[cIdx]);
+
+                card.innerHTML = `
+                    <p class="font-bold text-slate-800 mb-3">${i+1}. ${currentLang==='hi'?q.qh:q.qe}</p>
+                    <div class="grid grid-cols-2 gap-4 text-xs">
+                        <div class="p-3 bg-white/50 rounded-lg border">
+                            <p class="text-slate-400 font-bold mb-1">${uiLabels[currentLang].revYour}</p>
+                            <p class="font-bold text-sm ${isCor?'text-green-600':'text-red-600'}">${uDisplay}</p>
+                        </div>
+                        <div class="p-3 bg-white/50 rounded-lg border">
+                            <p class="text-slate-400 font-bold mb-1">${uiLabels[currentLang].revCorrect}</p>
+                            <p class="font-bold text-sm text-green-600">${cDisplay}</p>
+                        </div>
+                    </div>
+                `;
+                rev.appendChild(card);
+            });
+            
+            document.getElementById('res-score').textContent = score;
+            document.getElementById('res-acc').textContent = Math.round((score/10)*100) + '%';
+            document.getElementById('res-name').textContent = name;
+            document.getElementById('res-exam-cat').textContent = document.getElementById('user-exam').value;
+            document.getElementById('info-modal').classList.add('hidden');
+            document.getElementById('result-view').classList.remove('hidden');
+        }
+
+        function nextQuestion() { 
+            if(currentIndex < 9) { 
+                currentIndex++; 
+                displayQuestion(); 
+            } else { 
+                confirmSubmit(); 
+            } 
+        }
+        
+        function prevQuestion() { 
+            if(currentIndex > 0) { 
+                currentIndex--; 
+                displayQuestion(); 
+            } 
+        }
+        
+        function shareToWhatsapp() {
+            const score = document.getElementById('res-score').textContent;
+            const text = `I scored ${score}/10 in Environment Quiz 2025 on Concept ki Pathshala!`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
+        }
+        
+        window.onload = init;
+    </script>
+</body>
+</html>
